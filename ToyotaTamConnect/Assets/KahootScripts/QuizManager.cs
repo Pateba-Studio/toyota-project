@@ -30,6 +30,7 @@ public class QuizManager : MonoBehaviour
 
 
     [SerializeField] private TextMeshProUGUI[] answerText;
+    [SerializeField] private Button[] answerButton;
     public SoalData[] questions;
 
     void Start()
@@ -50,7 +51,8 @@ public class QuizManager : MonoBehaviour
             time += Time.deltaTime;
 
         }
-        if (!isWin && soalCounter == jumlahSoal)
+
+        if (!isWin && soalCounter == questions.Length)
         {
             StartCoroutine(ToGameOver());
               
@@ -84,6 +86,7 @@ public class QuizManager : MonoBehaviour
             answerText[i].text = currentQuestion.Jawaban[i].jawaban;
         }
 
+        EnableAnswer();
     }
 
 
@@ -102,9 +105,10 @@ public class QuizManager : MonoBehaviour
         {
             isWin = false;
             gameScore += 10;
+            soalCounter++;
 
             StartCoroutine(CorrectAnswer());
-
+            StartCoroutine(TransitionToNextQuestion());
         }
         else
         {
@@ -116,17 +120,15 @@ public class QuizManager : MonoBehaviour
                  
                 }
             }
+            DisableAnswer(i);
             StartCoroutine(WrongAnswer());
         }
-
-        soalCounter++;
-        
 
         if (!isWin)
         {
             if (soalCounter != jumlahSoal)
             {
-                StartCoroutine(TransitionToNextQuestion());
+               // StartCoroutine(TransitionToNextQuestion());
             }
                 
         }
@@ -146,7 +148,7 @@ public class QuizManager : MonoBehaviour
     private IEnumerator CorrectAnswer()
     {
         correctPanel.SetActive(true);
-        //FindObjectOfType<AudioManager>().Play("CorrectSFX");
+        FindObjectOfType<AudioManager>().Play("CorrectSFX");
         yield return new WaitForSeconds(timeBetweenQuestions);
         correctPanel.SetActive(false);
     }
@@ -154,12 +156,24 @@ public class QuizManager : MonoBehaviour
     private IEnumerator WrongAnswer()
     {
         wrongPanel.SetActive(true);
-        //FindObjectOfType<AudioManager>().Play("WrongSFX");
+        FindObjectOfType<AudioManager>().Play("WrongSFX");
         yield return new WaitForSeconds(timeBetweenQuestions);
-
         wrongPanel.SetActive(false);
     }
 
+    private void DisableAnswer(int i)
+    {
+        answerButton[i].interactable = false;
+    }
+
+    private void EnableAnswer()
+    {
+        for(int i = 0; i < 4; i++)
+        {
+            //answerButton[i].interactable = false;
+            answerButton[i].interactable = true;
+        }
+    }
     private IEnumerator ToGameOver()
     {
         yield return new WaitForSeconds(timeBetweenQuestions);

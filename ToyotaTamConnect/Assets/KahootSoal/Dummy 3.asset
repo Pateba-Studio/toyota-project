@@ -22,4 +22,4 @@ MonoBehaviour:
     isTrue: 0
   - jawaban: MITSUBISHI
     isTrue: 0
-  image: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  image: {fileID: 21300000, guid: 8bb8ae9edb708bb46bcb7869d5ad7862, type: 3}

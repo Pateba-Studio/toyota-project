@@ -15,11 +15,11 @@ MonoBehaviour:
   soal: JAWABANNYA A
   jawaban:
   - jawaban: A
-    isTrue: 0
-  - jawaban: GUNUNG
     isTrue: 1
+  - jawaban: GUNUNG
+    isTrue: 0
   - jawaban: LEMBAH
     isTrue: 0
   - jawaban: PANTAI
     isTrue: 0
-  image: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  image: {fileID: 21300000, guid: 87a187d70b7b8e147b4a448a5f051f08, type: 3}

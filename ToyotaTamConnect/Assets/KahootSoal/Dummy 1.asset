@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92ff8ed826e753b47846ea518ba9fc58, type: 3}
   m_Name: Dummy 1
   m_EditorClassIdentifier: 
-  soal: MOBIL APAKAH DIATAS ?
+  soal: MOBIL APAKAH DI ATAS?
   jawaban:
   - jawaban: NISSAN SKYLINE
     isTrue: 0
@@ -22,4 +22,4 @@ MonoBehaviour:
     isTrue: 1
   - jawaban: PORSCHE 911
     isTrue: 0
-  image: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  image: {fileID: 21300000, guid: 2a16d9e36778b684a89bf7daf7dac2ec, type: 3}
