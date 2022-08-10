@@ -11,7 +11,7 @@ public class SoalData : ScriptableObject
     private string soal;
 
     [SerializeField]
-    private Answer[] jawaban;
+    private Answer[] jawaban = new Answer[4];
     
     
     [SerializeField]
@@ -43,6 +43,34 @@ public class SoalData : ScriptableObject
             return image;
         }
     }
-   
+
+
+    public void SetSoal(string _soal)
+    {
+        this.soal = _soal;
+    }
+    public void SetAnswerA(string _answer, bool _isCorrect)
+    {
+        jawaban[0] =  new Answer(_answer, _isCorrect);
+    }
+    public void SetAnswerB(string _answer, bool _isCorrect)
+    {
+        jawaban[1] = new Answer(_answer, _isCorrect);
+    }
+    public void SetAnswerC(string _answer, bool _isCorrect)
+    {
+        jawaban[2] = new Answer(_answer, _isCorrect);
+    }
+    public void SetAnswerD(string _answer, bool _isCorrect)
+    {
+        jawaban[3] = new Answer(_answer, _isCorrect);
+    } 
+    public void SetImage(Sprite _image)
+    {
+        this.image = _image;
+    }
+
+    
+
 }
 

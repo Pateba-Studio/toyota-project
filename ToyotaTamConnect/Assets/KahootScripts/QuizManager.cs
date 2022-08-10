@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using SimpleJSON;
 
 public class QuizManager : MonoBehaviour
 {
@@ -14,6 +15,14 @@ public class QuizManager : MonoBehaviour
     public bool isWin, sfxOn;
     public Image image;
     public int jumlahSoal = 10;
+
+    private JSONClass jsonData;
+    private JSONArray jsonArray;
+    [SerializeField] private string jsonName, jsonAvatar;
+    [SerializeField] private int jsonId;
+    public string url;
+    public int NRP;
+
     [SerializeField] private float time;
     [SerializeField] private int soalCounter;
 
@@ -35,13 +44,45 @@ public class QuizManager : MonoBehaviour
 
     void Start()
     {
+        //GetQuestion();
+
         sfxOn = true;
         if (unansweredQuestions == null || unansweredQuestions.Count == 0)
         {
             unansweredQuestions = questions.ToList<SoalData>();
         }
 
+       
         SetCurrentQuestion();
+        //StartCoroutine(LoadJson(url));
+    }
+    private IEnumerator LoadJson(string urlString)
+    {
+        string link = urlString;
+        WWW jsonUrl = new WWW(link);
+
+        yield return jsonUrl;
+
+        if (jsonUrl.error == null)
+        {
+            
+            //GetQuestion(jsonUrl.text);
+            //SetJSONData(jsonId, jsonName, jsonEmail, jsonAvatar);
+        }
+        else
+        {
+            print("ERROR : " + jsonUrl.error);
+        }
+    }
+    private void GetJSONData(string jsonData)
+    {
+        jsonArray = JSON.Parse(jsonData).AsArray;
+
+        jsonName = jsonArray[18]["name"];
+    }
+    private void SetJSONData(int _id, string _name, string _email, string _avatar)
+    {
+        jsonData = new JSONClass(_id, _name, _email, _avatar);
     }
 
     void Update()
@@ -180,5 +221,45 @@ public class QuizManager : MonoBehaviour
         isWin = true;
     }
 
+
+    public void GetQuestion()
+    {
+        //jsonArray = JSON.Parse(jsonData).AsArray;
+        //int i = 1;
+        //int j = 0;
+
+        for(int i = 1; i <= jumlahSoal; i++)
+        {
+            SoalData s = ScriptableObject.CreateInstance<SoalData>();
+            s.SetSoal("hayuk");
+            s.SetAnswerA("benar", true);
+            s.SetAnswerB("salah", false);
+            s.SetAnswerC("wrong", false);
+            s.SetAnswerD("false", false);
+
+            questions = new SoalData[i];
+
+            questions[i-1] = s;
+
+        }
+
+    }
+
+    private int GetId()
+    {
+        return jsonData.id;
+    }
+    private string GetName()
+    {
+        return jsonData.name;
+    }
+    private string GetEmail()
+    {
+        return jsonData.email;
+    }
+    private string GetAvatar()
+    {
+        return jsonData.avatar;
+    }
 
 }
