@@ -18,7 +18,7 @@ public class QuizManager : MonoBehaviour
 
     private JSONClass jsonData;
     private JSONArray jsonArray;
-    [SerializeField] private string jsonName, jsonAvatar;
+    [SerializeField] private string jsonName, jsonAvatar, jsonEmail;
     [SerializeField] private int jsonId;
     public string url;
     public int NRP;
@@ -42,19 +42,29 @@ public class QuizManager : MonoBehaviour
     [SerializeField] private Button[] answerButton;
     public SoalData[] questions;
 
+    private void Awake()
+    {
+        StartCoroutine(LoadJson(url));
+    }
     void Start()
     {
         //GetQuestion();
-
         sfxOn = true;
+        //if (unansweredQuestions == null || unansweredQuestions.Count == 0)
+        //{
+        //    unansweredQuestions = questions.ToList<SoalData>();
+        //}
+
+        //SetCurrentQuestion();
+    }
+
+    void StartQuestion()
+    {
         if (unansweredQuestions == null || unansweredQuestions.Count == 0)
         {
             unansweredQuestions = questions.ToList<SoalData>();
         }
-
-       
         SetCurrentQuestion();
-        //StartCoroutine(LoadJson(url));
     }
     private IEnumerator LoadJson(string urlString)
     {
@@ -66,7 +76,7 @@ public class QuizManager : MonoBehaviour
         if (jsonUrl.error == null)
         {
             
-            //GetQuestion(jsonUrl.text);
+            GetQuestion(jsonUrl.text);
             //SetJSONData(jsonId, jsonName, jsonEmail, jsonAvatar);
         }
         else
@@ -74,12 +84,7 @@ public class QuizManager : MonoBehaviour
             print("ERROR : " + jsonUrl.error);
         }
     }
-    private void GetJSONData(string jsonData)
-    {
-        jsonArray = JSON.Parse(jsonData).AsArray;
-
-        jsonName = jsonArray[18]["name"];
-    }
+    
     private void SetJSONData(int _id, string _name, string _email, string _avatar)
     {
         jsonData = new JSONClass(_id, _name, _email, _avatar);
@@ -92,11 +97,10 @@ public class QuizManager : MonoBehaviour
             time += Time.deltaTime;
 
         }
-
-        if (!isWin && soalCounter == questions.Length)
+        
+        if (!isWin && soalCounter == jumlahSoal)
         {
             StartCoroutine(ToGameOver());
-              
         }
 
         if (isWin)
@@ -105,14 +109,10 @@ public class QuizManager : MonoBehaviour
             if (sfxOn)
             {
                 sfxOn = false;
-                //FindObjectOfType<AudioManager>().Play("GameOverSFX");
+                FindObjectOfType<AudioManager>().Play("GameOverSFX");
             }
 
         }
-
-        
-
-
 
     }
     void SetCurrentQuestion()
@@ -136,7 +136,7 @@ public class QuizManager : MonoBehaviour
         unansweredQuestions.Remove(currentQuestion);
         yield return new WaitForSeconds(timeBetweenQuestions/2);
 
-        StartCoroutine("TutupSoal");
+        StartCoroutine(TutupSoal());
 
     }
 
@@ -178,7 +178,8 @@ public class QuizManager : MonoBehaviour
     private IEnumerator TutupSoal()
     {
         yield return new WaitForSeconds(0.3f);
-        Start();
+        StartQuestion();
+        
     }
 
     public void ChangeScene(string sceneName)
@@ -222,29 +223,43 @@ public class QuizManager : MonoBehaviour
     }
 
 
-    public void GetQuestion()
+    public void GetQuestion(string jsonData)
     {
-        //jsonArray = JSON.Parse(jsonData).AsArray;
-        //int i = 1;
-        //int j = 0;
+        jsonArray = JSON.Parse(jsonData).AsArray;
 
-        for(int i = 1; i <= jumlahSoal; i++)
+        questions = new SoalData[jsonArray.Count];
+        jumlahSoal = questions.Length;
+
+        for (int i = 0; i < jsonArray.Count; i++)
         {
-            SoalData s = ScriptableObject.CreateInstance<SoalData>();
-            s.SetSoal("hayuk");
-            s.SetAnswerA("benar", true);
-            s.SetAnswerB("salah", false);
-            s.SetAnswerC("wrong", false);
-            s.SetAnswerD("false", false);
+            jsonId = jsonArray[i]["id"];
+            jsonName = jsonArray[i]["name"];
+            jsonEmail = jsonArray[i]["email"];
+            jsonAvatar = jsonArray[i]["avatar"];
 
-            questions = new SoalData[i];
-
-            questions[i-1] = s;
-
+            //print("Perkenalkan, nama saya " + jsonName + ". Anda bisa menghubungi saya melalui email dibawah ini " + jsonEmail);
+            SetQuestion(i, jsonId, jsonName, jsonEmail, jsonAvatar);
         }
 
-    }
+        StartQuestion();
 
+    }
+    public void SetQuestion(int counter, int _id, string _name, string _email, string _avatar)
+    {
+        //jsonData = new JSONClass(_id, _name, _email, _avatar);
+        SoalData s = ScriptableObject.CreateInstance<SoalData>();
+        s.SetSoal(counter.ToString());
+        s.SetAnswerA(_id.ToString(), true);
+        s.SetAnswerB(_name, false);
+        s.SetAnswerC(_email, false);
+        s.SetAnswerD(_avatar, false);
+        //s.SetImage()
+
+        //print("Soal ke " + s.Soal);
+        questions[counter] = s;
+
+    }
+    
     private int GetId()
     {
         return jsonData.id;

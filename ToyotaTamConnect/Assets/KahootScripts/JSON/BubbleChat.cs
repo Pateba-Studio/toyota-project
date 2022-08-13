@@ -15,13 +15,13 @@ public class BubbleChat : MonoBehaviour
     private JSONArray jsonArray;
     [SerializeField] private string jsonName, jsonEmail, jsonAvatar;
     [SerializeField] private int jsonId;
-    public GameObject chatBubble;
-    public TextMeshProUGUI chat;
+    //public GameObject chatBubble;
+    //public TextMeshProUGUI chat;
 
     void Start()
     {
         StartCoroutine(LoadJson(url));
-        chatBubble.SetActive(false);
+        //chatBubble.SetActive(false);
     }
     private IEnumerator LoadJson(string urlString)
     {
@@ -32,9 +32,9 @@ public class BubbleChat : MonoBehaviour
 
         if (jsonUrl.error == null)
         {
-            chatBubble.SetActive(true);
+            //chatBubble.SetActive(true);
             GetJSONData(jsonUrl.text);
-            print(jsonName);
+            //print(jsonName);
             SetJSONData(jsonId, jsonName, jsonEmail, jsonAvatar);
             SetChatBubbleText();
         }
@@ -62,7 +62,9 @@ public class BubbleChat : MonoBehaviour
 
     private void SetChatBubbleText()
     {
-        chat.text = "Perkenalkan, nama saya " + GetName() + ". Anda bisa menghubungi saya melalui email dibawah ini " + GetEmail();
+        //chat.text = "Perkenalkan, nama saya " + GetName() + ". Anda bisa menghubungi saya melalui email dibawah ini " + GetEmail();
+        print("Perkenalkan, nama saya " + GetName() + ". Anda bisa menghubungi saya melalui email dibawah ini " + GetEmail());
+        
     }
 
     private int GetId()
