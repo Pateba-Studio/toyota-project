@@ -239,6 +239,7 @@ public class QuizManager : MonoBehaviour
 
             //print("Perkenalkan, nama saya " + jsonName + ". Anda bisa menghubungi saya melalui email dibawah ini " + jsonEmail);
             SetQuestion(i, jsonId, jsonName, jsonEmail, jsonAvatar);
+            
         }
 
         StartQuestion();
@@ -254,6 +255,7 @@ public class QuizManager : MonoBehaviour
         s.SetAnswerC(_email, false);
         s.SetAnswerD(_avatar, false);
         //s.SetImage()
+        //s.SetCorrectAnswer(_correctAnswer)
 
         //print("Soal ke " + s.Soal);
         questions[counter] = s;

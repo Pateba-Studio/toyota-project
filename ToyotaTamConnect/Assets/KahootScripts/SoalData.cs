@@ -70,6 +70,20 @@ public class SoalData : ScriptableObject
         this.image = _image;
     }
 
+    public void SetCorrectAnswer(string _correctAnswer)
+    {
+        foreach (Answer jawaban in jawaban)
+        {
+            if (jawaban.jawaban == _correctAnswer)
+            {
+                jawaban.isTrue = true;
+            }
+            else 
+            { 
+                jawaban.isTrue = false; 
+            }
+        }
+    }
     
 
 }
