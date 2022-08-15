@@ -5,12 +5,12 @@ using UnityEngine;
 public class obstacleScript : MonoBehaviour
 {
     float speed = 14f;
-    [SerializeField] Sprite[] spriteObs;
-    // Start is called before the first frame update
-    void Start()
-    {
-        gameObject.GetComponent<SpriteRenderer>().sprite = spriteObs[Random.Range(0, spriteObs.Length)];
-    }
+    //[SerializeField] Sprite[] spriteObs;
+    //// Start is called before the first frame update
+    //void Start()
+    //{
+    //    gameObject.GetComponent<SpriteRenderer>().sprite = spriteObs[Random.Range(0, spriteObs.Length)];
+    //}
     // Update is called once per frame
     void Update()
     {

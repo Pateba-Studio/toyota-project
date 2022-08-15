@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class enemyCarMove : MonoBehaviour {
-    public static float speed = 7f;
+    public static float speed = 5f;
 
     // Use this for initialization
     void Start () {

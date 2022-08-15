@@ -7,7 +7,7 @@ using TMPro;
 public class soalManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI plat, leftAns, rightAns, timer, soal;
-    [SerializeField] GameObject obstacle;
+    [SerializeField] GameObject obstacle, soalPanel;
     List<int> list = new List<int>();
     List<string> listJawabPlat, listPlat, listSoal, listJawaban, fakeJawaban;
     [SerializeField] uiManager ui;
@@ -79,6 +79,8 @@ public class soalManager : MonoBehaviour
             yield return new WaitForSeconds(7);
             soal.text = listSoal[i];
             plat.text = "";
+            ui.Pause();
+            soalPanel.SetActive(true);
             bukaSoal = true;
             if (Random.Range(0, 2) == 1)
                 leftTrue();
@@ -111,7 +113,7 @@ public class soalManager : MonoBehaviour
         //    rightAns.text = listJawabPlat[index];
         //    leftAns.text = listJawabPlat[i];
         //}
-        StartCoroutine(spawnObs(1.8f));
+        StartCoroutine(spawnObs(1.4f));
     }
     private void rightTrue()
     {
@@ -129,7 +131,7 @@ public class soalManager : MonoBehaviour
         //    rightAns.text = listJawabPlat[i];
         //    leftAns.text = listJawabPlat[index];
         //}
-        StartCoroutine(spawnObs(-1.8f));
+        StartCoroutine(spawnObs(-1.4f));
     }
     IEnumerator spawnObs(float x)
     {

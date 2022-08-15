@@ -5,8 +5,8 @@ public class carSpawner : MonoBehaviour
 {
     public GameObject[] cars;
     int carNo;
-    private float minPos = -2.8f;
-    private float maxPos = 2.8f;
+    private float minPos = -2.4f;
+    private float maxPos = 2.4f;
     public float delayTimer = 1.0f;
     private float delay;
 

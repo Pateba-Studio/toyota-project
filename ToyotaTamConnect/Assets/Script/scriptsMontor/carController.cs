@@ -15,9 +15,12 @@ public class carController : MonoBehaviour {
 
     bool currentPlatformAndroid = false;
 
+    [SerializeField] SpriteRenderer spriteRenderer;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         //#if (UNITY_ANDROID)
         //{
@@ -71,13 +74,35 @@ public class carController : MonoBehaviour {
         position.x = Mathf.Clamp(position.x, minPos, maxPos);
         transform.position = position;
     }
-
-    //called when there is a collision between two game objects
-    void OnCollisionEnter2D (Collision2D col) {
-        if(col.gameObject.tag == "Enemy Car")
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy Car")
         {
-            ui.GameOverActivated();
+            //ui.GameOverActivated();
+            StartCoroutine(CarBlink());
         }
+    }
+    IEnumerator CarBlink()
+    {
+        Color tmp = spriteRenderer.color;
+        tmp.a = .5f;
+        spriteRenderer.color = tmp;
+        yield return new WaitForSeconds(.5f);
+        tmp.a = 1f;
+        spriteRenderer.color = tmp;
+        yield return new WaitForSeconds(.5f);
+        tmp.a = .5f;
+        spriteRenderer.color = tmp;
+        yield return new WaitForSeconds(.5f);
+        tmp.a = 1f;
+        spriteRenderer.color = tmp;
+        yield return new WaitForSeconds(.5f);
+        tmp.a = .5f;
+        spriteRenderer.color = tmp;
+        yield return new WaitForSeconds(.5f);
+        tmp.a = 1f;
+        spriteRenderer.color = tmp;
+        yield return new WaitForSeconds(.5f);
     }
     void TouchMove()
     {
