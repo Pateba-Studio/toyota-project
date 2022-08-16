@@ -1,0 +1,98 @@
+<!--
+unity webgl responsive
+
+template by dom
+dom@crowscrowscrows.com
+https://twitter.com/zerstoerer
+
+source code on github
+https://github.com/sno/unity-webgl-responsive
+-->
+
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <title>{{{ PRODUCT_NAME }}}</title>
+  </head>
+  <body>
+    <div class="webgl-wrapper">
+      <div class="aspect"></div>
+      <div class="webgl-content">
+        <div id="unityContainer">
+          <canvas id="unity-canvas" style="background: {{{ BACKGROUND_FILENAME ? 'url(\'Build/' + BACKGROUND_FILENAME.replace(/'/g, '%27') + '\') center / cover' : BACKGROUND_COLOR }}}"></canvas>
+          <div  id="LoadContainer" style="display: block; position: absolute; top: 0; right: 0; height: 100%; width: 100%;">
+            
+            <div class="logo"></div>
+            <div style="display: block; position: relative; top: 50%; left: 50%; margin-left: -100px; margin-top: -7px; height: 15px; width: 200px; border-style: solid; border: color #999; border-width: 1px; z-index: 9;">
+            
+              <div id="LoadBar" style="display: block; background-color: white; height: 15px; width: 0px; z-index: 10;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="MyLoader.js"></script>
+    <script>
+      function makeid() {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < 10; i++)
+          text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+      }
+
+      var LBar = document.getElementById("LoadBar");
+      var CBar = document.getElementById("LoadContainer");
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        dataUrl: "Build/{{{ DATA_FILENAME }}}",
+        frameworkUrl: "Build/{{{ FRAMEWORK_FILENAME }}}",
+        codeUrl: "Build/{{{ CODE_FILENAME }}}",
+#if MEMORY_FILENAME
+        memoryUrl: "Build/{{{ MEMORY_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+        symbolsUrl: "Build/{{{ SYMBOLS_FILENAME }}}",
+#endif
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "{{{ COMPANY_NAME }}}",
+        productName: "{{{ PRODUCT_NAME }}}",
+        productVersion: "{{{ PRODUCT_VERSION }}}",
+      }, (progress) => {
+          LBar.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          CBar.style.display = "none";
+          myGameInstance = unityInstance;
+
+          var retrievedPerson = JSON.parse(localStorage.getItem('playerData'));
+          myGameInstance.SendMessage('DataHooker', 'PlayerEmailHandler', retrievedPerson['email']);
+          myGameInstance.SendMessage('DataHooker', 'PlayerTicketHandler', retrievedPerson['ticket']);
+      });
+    </script>
+
+    <!-- check for F key press to toggle full screen -->
+    <script>
+      var isFullscreen = false;
+
+      document.addEventListener('keydown', function(event) {
+          if (event.which === 70) {
+              if (!isFullscreen) {
+                myGameInstance.SetFullscreen(1);
+              } else {
+                myGameInstance.SetFullscreen(0);
+              }
+              isFullscreen = !isFullscreen;
+          }
+      });
+    </script>
+  </body>
+</html>
