@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CrosshairController : MonoBehaviour
+public class BowController : MonoBehaviour
 {
   // void Awake()
   // {
