@@ -4,17 +4,6 @@ using UnityEngine;
 
 public class BowController : MonoBehaviour
 {
-  // void Awake()
-  // {
-  //   Cursor.visible = false;
-  // }
-
-  // void Update()
-  // {
-  //   Vector2 mouseCursorPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-  //   transform.position = mouseCursorPos;
-  // }
-
   public Transform player;
   public float speed = 5.0f;
   private bool touchStart = false;
