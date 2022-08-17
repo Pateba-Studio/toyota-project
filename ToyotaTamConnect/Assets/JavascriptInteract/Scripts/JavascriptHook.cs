@@ -17,7 +17,7 @@ public class JavascriptHook : MonoBehaviour
 
     void Update()
     {
-        detailText.text = $"{playerData.email}\n{playerData.ticket}";
+        //detailText.text = $"{playerData.email}\n{playerData.ticket}";
     }
 
     public void PlayerEmailHandler(string email) {
