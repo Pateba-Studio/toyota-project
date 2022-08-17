@@ -11,7 +11,7 @@ public class SoalData : ScriptableObject
     private string soal;
 
     [SerializeField]
-    private Answer[] jawaban = new Answer[4];
+    private AnswerJawaban[] jawaban = new AnswerJawaban[4];
     
     
     [SerializeField]
@@ -28,7 +28,7 @@ public class SoalData : ScriptableObject
         }
     }
 
-    public Answer[] Jawaban
+    public AnswerJawaban[] Jawaban
     {
         get
         {
@@ -51,19 +51,19 @@ public class SoalData : ScriptableObject
     }
     public void SetAnswerA(string _answer, bool _isCorrect)
     {
-        jawaban[0] =  new Answer(_answer, _isCorrect);
+        jawaban[0] =  new AnswerJawaban(_answer, _isCorrect);
     }
     public void SetAnswerB(string _answer, bool _isCorrect)
     {
-        jawaban[1] = new Answer(_answer, _isCorrect);
+        jawaban[1] = new AnswerJawaban(_answer, _isCorrect);
     }
     public void SetAnswerC(string _answer, bool _isCorrect)
     {
-        jawaban[2] = new Answer(_answer, _isCorrect);
+        jawaban[2] = new AnswerJawaban(_answer, _isCorrect);
     }
     public void SetAnswerD(string _answer, bool _isCorrect)
     {
-        jawaban[3] = new Answer(_answer, _isCorrect);
+        jawaban[3] = new AnswerJawaban(_answer, _isCorrect);
     } 
     public void SetImage(Sprite _image)
     {
@@ -72,7 +72,7 @@ public class SoalData : ScriptableObject
 
     public void SetCorrectAnswer(string _correctAnswer)
     {
-        foreach (Answer jawaban in jawaban)
+        foreach (AnswerJawaban jawaban in jawaban)
         {
             if (jawaban.jawaban == _correctAnswer)
             {

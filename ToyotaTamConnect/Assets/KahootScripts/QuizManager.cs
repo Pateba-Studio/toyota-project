@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using UnityEditor;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -6,24 +7,61 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using SimpleJSON;
+using UnityEngine.Networking;
+
+[System.Serializable]
+public class Answer
+{
+    public int id;
+    public string answer;
+}
+
+[System.Serializable]
+public class AnswerCorrect
+{
+    public int id;
+    public string answer;
+}
+
+[System.Serializable]
+public class Data
+{
+    public int id;
+    public string sub_master_value;
+    public object media;
+    public string media_type;
+    public string question_type;
+    public string question;
+    public List<Answer> answers;
+    public AnswerCorrect answer_correct;
+}
+
+[System.Serializable]
+public class QuestionData
+{
+    public bool success;
+    public List<Data> data;
+}
 
 public class QuizManager : MonoBehaviour
 {
-   
     private int gameScore = 0;
-    //private float time;
     public bool isWin, sfxOn;
     public Image image;
     public int jumlahSoal = 10;
 
     private JSONClass jsonData;
     private JSONArray jsonArray;
-    [SerializeField] private string jsonName, jsonAvatar, jsonEmail;
-    [SerializeField] private int jsonId;
+    private string jsonSoal, jsonA, jsonB, jsonC, jsonD, jsonCorrectAnswer;
+    //[SerializeField] private int jsonId;
     public string url;
-    public int NRP;
+    //public int NRP;
 
-    [SerializeField] private float time;
+
+
+    private string jsonQuestion;
+
+    //[SerializeField] private float time;
     [SerializeField] private int soalCounter;
 
     [SerializeField] private GameObject correctPanel;
@@ -34,17 +72,18 @@ public class QuizManager : MonoBehaviour
     private SoalData currentQuestion;
     [SerializeField] private TextMeshProUGUI soalText;
 
-
     [SerializeField] private float timeBetweenQuestions = 1f;
-
 
     [SerializeField] private TextMeshProUGUI[] answerText;
     [SerializeField] private Button[] answerButton;
+    public JavascriptHook playerDataHandler;
+    public QuestionData questionData;
     public SoalData[] questions;
 
     private void Awake()
     {
-        StartCoroutine(LoadJson(url));
+        //StartCoroutine(LoadJson(url));
+        StartCoroutine(PostData_Coroutine());
     }
     void Start()
     {
@@ -54,7 +93,7 @@ public class QuizManager : MonoBehaviour
         //{
         //    unansweredQuestions = questions.ToList<SoalData>();
         //}
-
+        
         //SetCurrentQuestion();
     }
 
@@ -76,7 +115,7 @@ public class QuizManager : MonoBehaviour
         if (jsonUrl.error == null)
         {
             
-            GetQuestion(jsonUrl.text);
+            //GetQuestion(quest);
             //SetJSONData(jsonId, jsonName, jsonEmail, jsonAvatar);
         }
         else
@@ -85,6 +124,35 @@ public class QuizManager : MonoBehaviour
         }
     }
     
+
+    
+      
+   
+
+    IEnumerator PostData_Coroutine()
+    {
+        string uri = "https://tamconnect.com/api/game-question";
+        WWWForm form = new WWWForm();
+        form.AddField("sub_master_value_id", playerDataHandler.playerData.sub_master_value_id);
+        form.AddField("ticket", playerDataHandler.playerData.ticket);
+        using (UnityWebRequest request = UnityWebRequest.Post(uri, form))
+        {
+            yield return request.SendWebRequest();
+            if (request.isNetworkError || request.isHttpError)
+                print(request.error);
+            else
+            {
+                jsonQuestion = request.downloadHandler.text;
+                GetQuestion(jsonQuestion);
+            }
+                
+            
+        }
+
+        
+        //GetQuestion(questionData);
+        //print(questionData);
+    }
     private void SetJSONData(int _id, string _name, string _email, string _avatar)
     {
         jsonData = new JSONClass(_id, _name, _email, _avatar);
@@ -94,7 +162,7 @@ public class QuizManager : MonoBehaviour
     {
         if (!isWin)
         {
-            time += Time.deltaTime;
+            //time += Time.deltaTime;
 
         }
         
@@ -154,7 +222,7 @@ public class QuizManager : MonoBehaviour
         else
         {
             isWin = false;
-            foreach (Answer jawaban in currentQuestion.Jawaban)
+            foreach (AnswerJawaban jawaban in currentQuestion.Jawaban)
             {
                 if (jawaban.isTrue)
                 {
@@ -225,37 +293,41 @@ public class QuizManager : MonoBehaviour
 
     public void GetQuestion(string jsonData)
     {
-        jsonArray = JSON.Parse(jsonData).AsArray;
-
-        questions = new SoalData[jsonArray.Count];
+        //jsonArray = JSON.Parse(jsonData).AsArray;
+        questionData = JsonUtility.FromJson<QuestionData>(jsonQuestion);
+        questions = new SoalData[questionData.data.Count];
         jumlahSoal = questions.Length;
 
-        for (int i = 0; i < jsonArray.Count; i++)
+        for (int i = 0; i < questionData.data.Count; i++)
         {
-            jsonId = jsonArray[i]["id"];
-            jsonName = jsonArray[i]["name"];
-            jsonEmail = jsonArray[i]["email"];
-            jsonAvatar = jsonArray[i]["avatar"];
+            jsonSoal = questionData.data[i].question;
+            jsonA = questionData.data[i].answers[0].answer;
+            jsonB = questionData.data[i].answers[1].answer;
+            jsonC = questionData.data[i].answers[2].answer;
+            jsonD = questionData.data[i].answers[2].answer;
+            jsonCorrectAnswer = questionData.data[i].answer_correct.answer;
 
-            //print("Perkenalkan, nama saya " + jsonName + ". Anda bisa menghubungi saya melalui email dibawah ini " + jsonEmail);
-            SetQuestion(i, jsonId, jsonName, jsonEmail, jsonAvatar);
+            //print("Perkenalkan, nama saya " + jsonSoal + ". Anda bisa menghubungi saya melalui email dibawah ini " + jsonC);
+            SetQuestion(i, jsonSoal, jsonA, jsonB, jsonC, jsonD, jsonCorrectAnswer);
             
         }
 
         StartQuestion();
 
     }
-    public void SetQuestion(int counter, int _id, string _name, string _email, string _avatar)
+    public void SetQuestion(int counter, string _soal, string _a, string _b , string _c, string _d, string _correctAnswer)
     {
         //jsonData = new JSONClass(_id, _name, _email, _avatar);
         SoalData s = ScriptableObject.CreateInstance<SoalData>();
-        s.SetSoal(counter.ToString());
-        s.SetAnswerA(_id.ToString(), true);
-        s.SetAnswerB(_name, false);
-        s.SetAnswerC(_email, false);
-        s.SetAnswerD(_avatar, false);
+        s.SetSoal(_soal);
+       
+        s.SetAnswerA(_a, false);
+        s.SetAnswerB(_b, false);
+        s.SetAnswerC(_c, false);
+        s.SetAnswerD(_d, false);
+        s.SetCorrectAnswer(_correctAnswer);
         //s.SetImage()
-        //s.SetCorrectAnswer(_correctAnswer)
+
 
         //print("Soal ke " + s.Soal);
         questions[counter] = s;

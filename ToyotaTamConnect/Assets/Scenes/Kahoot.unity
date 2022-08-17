@@ -2135,6 +2135,7 @@ GameObject:
   m_Component:
   - component: {fileID: 773108878}
   - component: {fileID: 773108877}
+  - component: {fileID: 773108879}
   m_Layer: 0
   m_Name: ==QUIZ MANAGER==
   m_TagString: Untagged
@@ -2158,13 +2159,7 @@ MonoBehaviour:
   sfxOn: 0
   image: {fileID: 1821634952}
   jumlahSoal: 5
-  jsonName: 
-  jsonAvatar: 
-  jsonEmail: 
-  jsonId: 0
   url: https://5e510330f2c0d300147c034c.mockapi.io/users
-  NRP: 18
-  time: 0
   soalCounter: 0
   correctPanel: {fileID: 1549511128}
   wrongPanel: {fileID: 1288945115}
@@ -2181,6 +2176,10 @@ MonoBehaviour:
   - {fileID: 742306791}
   - {fileID: 1006371199}
   - {fileID: 244171837}
+  playerDataHandler: {fileID: 773108879}
+  questionData:
+    success: 0
+    data: []
   questions: []
 --- !u!4 &773108878
 Transform:
@@ -2196,6 +2195,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &773108879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773108876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9af740c16fba08642a03181b19531233, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerData:
+    email: yoshivirgiawan09@gmail.com
+    ticket: 996D73D8
+    sub_master_value_id: 3
 --- !u!1 &928647903
 GameObject:
   m_ObjectHideFlags: 0
@@ -2616,36 +2631,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1207470493}
   m_CullTransparentMesh: 1
---- !u!1 &1273474986
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1273474987}
-  m_Layer: 0
-  m_Name: chatbbb\
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1273474987
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1273474986}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1460451971}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1280414591
 GameObject:
   m_ObjectHideFlags: 0
@@ -3368,7 +3353,7 @@ GameObject:
   - component: {fileID: 1460451971}
   - component: {fileID: 1460451972}
   m_Layer: 0
-  m_Name: JSON
+  m_Name: ==JSON===
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3384,8 +3369,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 187.65054, y: 287.5637, z: -289.79358}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1273474987}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3398,15 +3382,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1460451970}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82858ec17934fc743bd759ef480195a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 9af740c16fba08642a03181b19531233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  url: https://5e510330f2c0d300147c034c.mockapi.io/users
-  NRP: 18
-  jsonName: 
-  jsonEmail: 
-  jsonAvatar: 
-  jsonId: 0
+  playerData:
+    email: yoshivirgiawan09@gmail.com
+    ticket: 996D73D8
+    sub_master_value_id: 2
 --- !u!1 &1549511128
 GameObject:
   m_ObjectHideFlags: 0
