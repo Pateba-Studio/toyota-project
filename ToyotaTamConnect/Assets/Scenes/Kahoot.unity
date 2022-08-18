@@ -2210,7 +2210,7 @@ MonoBehaviour:
   playerData:
     email: yoshivirgiawan09@gmail.com
     ticket: 996D73D8
-    sub_master_value_id: 3
+    sub_master_value_id: 4
 --- !u!1 &928647903
 GameObject:
   m_ObjectHideFlags: 0

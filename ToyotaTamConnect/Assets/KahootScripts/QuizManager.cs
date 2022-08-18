@@ -304,7 +304,7 @@ public class QuizManager : MonoBehaviour
             jsonA = questionData.data[i].answers[0].answer;
             jsonB = questionData.data[i].answers[1].answer;
             jsonC = questionData.data[i].answers[2].answer;
-            jsonD = questionData.data[i].answers[2].answer;
+            jsonD = questionData.data[i].answers[3].answer;
             jsonCorrectAnswer = questionData.data[i].answer_correct.answer;
 
             //print("Perkenalkan, nama saya " + jsonSoal + ". Anda bisa menghubungi saya melalui email dibawah ini " + jsonC);
