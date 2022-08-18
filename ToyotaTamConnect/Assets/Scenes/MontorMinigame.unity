@@ -175,6 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f65f4757fe53b24caa436359965eb9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  videoClipName: Vid1.mp4
   videoPlayer: {fileID: 1432201379}
   doneButton: {fileID: 786998088}
 --- !u!114 &2289595
@@ -897,6 +898,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f65f4757fe53b24caa436359965eb9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  videoClipName: Vid2.mp4
   videoPlayer: {fileID: 740158138}
   doneButton: {fileID: 327324786}
 --- !u!114 &117113216
