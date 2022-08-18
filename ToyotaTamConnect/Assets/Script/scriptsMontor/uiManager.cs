@@ -18,6 +18,7 @@ public class uiManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Pause();
         animator = scoreText.GetComponent<Animator>();
         //PlayerPrefs.SetInt("HasPlayed", 0); //reset tutor nyalakan ini lol
         //firstRun = PlayerPrefs.GetInt("HasPlayed");
