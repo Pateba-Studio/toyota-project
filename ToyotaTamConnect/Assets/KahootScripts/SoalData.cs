@@ -7,84 +7,45 @@ using UnityEngine.Video;
 [CreateAssetMenu(fileName = "New Soal", menuName = "Soal", order = 52)]
 public class SoalData : ScriptableObject
 {
-    [SerializeField]
-    private string soal;
+    public string mediaURL;
+    public string audioURL;
+    public string soal;
+    public List<AnswerJawaban> jawaban = new List<AnswerJawaban>();
 
-    [SerializeField]
-    private AnswerJawaban[] jawaban = new AnswerJawaban[4];
-    
-    
-    [SerializeField]
-    private Sprite image;
+    public string MediaURL { get { return MediaURL; } }
+    public string AudioURL { get { return audioURL; } }
+    public string Soal { get { return soal; } }
+    public List<AnswerJawaban> Jawaban { get { return jawaban; } }
 
-
-
-
-    public string Soal
+    public void SetMediaURL(string _mediaURL)
     {
-        get
-        {
-            return soal;
-        }
+        this.mediaURL = _mediaURL;
     }
 
-    public AnswerJawaban[] Jawaban
+    public void SetAudioURL(string _audioURL)
     {
-        get
-        {
-            return jawaban;
-        }
+        this.audioURL = _audioURL;
     }
-
-    public Sprite Image
-    {
-        get
-        {
-            return image;
-        }
-    }
-
 
     public void SetSoal(string _soal)
     {
         this.soal = _soal;
     }
-    public void SetAnswerA(string _answer, bool _isCorrect)
+
+    public void SetAnswer(int index, string _answer)
     {
-        jawaban[0] =  new AnswerJawaban(_answer, _isCorrect);
-    }
-    public void SetAnswerB(string _answer, bool _isCorrect)
-    {
-        jawaban[1] = new AnswerJawaban(_answer, _isCorrect);
-    }
-    public void SetAnswerC(string _answer, bool _isCorrect)
-    {
-        jawaban[2] = new AnswerJawaban(_answer, _isCorrect);
-    }
-    public void SetAnswerD(string _answer, bool _isCorrect)
-    {
-        jawaban[3] = new AnswerJawaban(_answer, _isCorrect);
-    } 
-    public void SetImage(Sprite _image)
-    {
-        this.image = _image;
+        jawaban.Add(new AnswerJawaban(_answer, false));
     }
 
     public void SetCorrectAnswer(string _correctAnswer)
     {
-        foreach (AnswerJawaban jawaban in jawaban)
+        for (int i = 0; i < jawaban.Count; i++)
         {
-            if (jawaban.jawaban == _correctAnswer)
-            {
-                jawaban.isTrue = true;
-            }
-            else 
-            { 
-                jawaban.isTrue = false; 
-            }
+            if (jawaban[i].jawaban == _correctAnswer)
+                jawaban[i].isTrue = true;
+            else
+                jawaban[i].isTrue = false;
         }
     }
-    
-
 }
 
