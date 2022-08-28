@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using UnityEngine.Events;
 
 [System.Serializable]
 public class GateDetails
@@ -31,6 +33,7 @@ public class IntroManager : MonoBehaviour
 {
     public bool isDone;
     public GameManager gameManager;
+    public GameObject assesmentPopUp;
     public GameObject nextButton;
     public GameObject instructionText;
     public GameObject introHandler;
@@ -38,6 +41,7 @@ public class IntroManager : MonoBehaviour
     public GameObject imageHandler;
     public GameObject textHandler;
     public GameObject descriptionTextHandler;
+    public UnityEvent videoIsFinished;
     public List<GateDetails> gateDetails;
     public List<IntroInfo> introInfo;
 
@@ -53,7 +57,12 @@ public class IntroManager : MonoBehaviour
         isDone = !Convert.ToBoolean(introInfo.Count);
     }
 
-    public void VideoEndReached(VideoPlayer vp)
+    public void OpenLink(string targetURL)
+    {
+        Application.OpenURL(targetURL);
+    }
+
+    public void EndReached(VideoPlayer vp)
     {
         videoHandler.SetActive(false);
         SetButtonAndInstruction(true, true);
@@ -61,7 +70,11 @@ public class IntroManager : MonoBehaviour
 
     public void NextButtonOnClicked()
     {
-        if (!isDone) StartIntro();
+        if (!isDone) 
+        { 
+            StartIntro();
+            introInfo.RemoveAt(0);
+        }
         else gameManager.StartGame();
     }
 
@@ -71,11 +84,12 @@ public class IntroManager : MonoBehaviour
 
         if (introInfo[0].introType == "video")
         {
-            videoHandler.SetActive(true);
             SetButtonAndInstruction(false, false);
-         
-            StartCoroutine(GetAudioClip(introInfo[0].mediaURL, introInfo[0].audioURL));
-            videoHandler.GetComponent<VideoPlayer>().loopPointReached += VideoEndReached;
+
+            videoHandler.SetActive(true);
+            videoHandler.GetComponent<VideoScript>().videoDetails.videoURL = introInfo[0].mediaURL;
+            videoHandler.GetComponent<VideoScript>().videoDetails.audioURL = introInfo[0].audioURL;
+            videoHandler.GetComponent<VideoScript>().PlayVideo(videoIsFinished);
         }
         else if (introInfo[0].introType == "image")
         {
@@ -91,8 +105,6 @@ public class IntroManager : MonoBehaviour
 
             descriptionTextHandler.GetComponent<Text>().text = introInfo[0].description;
         }
-
-        introInfo.RemoveAt(0);
     }
 
     public void SetButtonAndInstruction(bool btn, bool instruct)
@@ -106,28 +118,6 @@ public class IntroManager : MonoBehaviour
         videoHandler.SetActive(condition);
         imageHandler.SetActive(condition);
         textHandler.SetActive(condition);
-    }
-
-    public IEnumerator GetAudioClip(string mediaURL, string audioURL)
-    {
-        using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(audioURL, AudioType.MPEG))
-        {
-            yield return www.SendWebRequest();
-            if (www.isNetworkError)
-                Debug.Log(www.error);
-            else
-            {
-                videoHandler.GetComponent<VideoPlayer>().url = mediaURL;
-                videoHandler.GetComponent<AudioSource>().clip = DownloadHandlerAudioClip.GetContent(www);
-
-                videoHandler.GetComponent<VideoPlayer>().audioOutputMode = VideoAudioOutputMode.None;
-                videoHandler.GetComponent<VideoPlayer>().EnableAudioTrack(0, false);
-                videoHandler.GetComponent<VideoPlayer>().SetDirectAudioMute(0, true);
-
-                videoHandler.GetComponent<VideoPlayer>().Play();
-                videoHandler.GetComponent<AudioSource>().Play();
-            }
-        }
     }
 
     public IEnumerator GetImage(string mediaURL)

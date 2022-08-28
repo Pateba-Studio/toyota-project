@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class BalloonHandler : MonoBehaviour
 {
+    public bool isDone;
     public bool isSpawned;
     public int answerId;
     public float flySpeed;
     public BaloonManager baloonManager;
     public AnimationClip popOutAnimation;
+    public Transform departureMove;
     public Transform targetMove;
 
     // Start is called before the first frame update
@@ -21,9 +23,10 @@ public class BalloonHandler : MonoBehaviour
     void Update()
     {
         if (isSpawned) transform.position = Vector3.MoveTowards(transform.position, targetMove.position, flySpeed * Time.deltaTime);
+        if (transform.position == targetMove.position) transform.position = departureMove.position;
     }
 
-    void OnMouseDown()
+    public void ChooseBaloon()
     {
         if (baloonManager.isPlay) 
         {

@@ -6,11 +6,14 @@ public class BalloonSpawner : MonoBehaviour
 {
     public bool isDone;
     public float spawnCooldown;
+    public BaloonManager baloonManager;
+    public List<GameObject> balloonObject;
     public List<BalloonHandler> balloons;
 
     // Start is called before the first frame update
     void Start()
     {
+        baloonManager = GameObject.Find("Baloon Manager").GetComponent<BaloonManager>();
         StartCoroutine(SpawnBalloon());
     }
 

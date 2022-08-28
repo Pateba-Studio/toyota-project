@@ -1,3 +1,14 @@
+<!--
+unity webgl responsive
+
+template by dom
+dom@crowscrowscrows.com
+https://twitter.com/zerstoerer
+
+source code on github
+https://github.com/sno/unity-webgl-responsive
+-->
+
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
@@ -53,9 +64,9 @@
           myGameInstance = unityInstance;
 
           var retrievedPerson = JSON.parse(localStorage.getItem('playerData'));
-          myGameInstance.SendMessage('DataHooker', 'PlayerEmailHandler', retrievedPerson['email']);
-          myGameInstance.SendMessage('DataHooker', 'PlayerTicketHandler', retrievedPerson['ticket']);
-          myGameInstance.SendMessage('DataHooker', 'PlayerSubMasterValueHandler', retrievedPerson['sub_master_value_id']);
+          myGameInstance.SendMessage('Data Manager', 'PlayerEmailHandler', retrievedPerson['email']);
+          myGameInstance.SendMessage('Data Manager', 'PlayerTicketHandler', retrievedPerson['ticket']);
+          myGameInstance.SendMessage('Data Manager', 'PlayerSubMasterValueHandler', retrievedPerson['sub_master_value_id']);
       });
     </script>
 

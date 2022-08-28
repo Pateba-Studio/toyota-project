@@ -5,22 +5,19 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Gate.unity
     guid: ef7bf793d7b96bc4f8cbf25114087319
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Kahoot.unity
-    guid: 7923e6c80c5149746868aeff504f402b
-  - enabled: 0
+    guid: 365085767ce9ad747a4c593f05d0e186
+  - enabled: 1
     path: Assets/Scenes/Car.unity
-    guid: 643a09eba3b22b5489746dc680143ab1
-  - enabled: 0
+    guid: 3fa6c366527279b4f814e29e76f451bf
+  - enabled: 1
     path: Assets/Scenes/Archer.unity
-    guid: 5f605c2c9752ed8459f317ef5712e3a6
-  - enabled: 0
+    guid: b7049b43810bcb947b475e296e02f74c
+  - enabled: 1
     path: Assets/Scenes/Baloon.unity
     guid: cecb178c1b13b5c4f90bb5e1d6079352
-  - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects: {}

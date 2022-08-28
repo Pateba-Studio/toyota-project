@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Balloon
   - Question
+  - Enemy Car
+  - Correct Answer
+  - Wrong Answer
   layers:
   - Default
   - TransparentFX

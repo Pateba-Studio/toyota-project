@@ -7,6 +7,7 @@ using System.Text;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using UnityEngine.Video;
+using System.IO;
 
 [System.Serializable]
 public class AnswerDetails
@@ -62,12 +63,36 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        subMasterValueId = javascriptHook.playerData.sub_master_value_id;
+
+        if (SceneManager.GetActiveScene().name == "Gate")
+        {
+            introManager = GameObject.Find("Intro Manager").GetComponent<IntroManager>();
+            getQuestion.introManager = introManager;
+
+            if (getQuestion.hallType == HallType.HallPDP)
+                if (int.Parse(javascriptHook.playerData.sub_master_value_id) > 6 &&
+                    !introManager.assesmentPopUp.activeInHierarchy)
+                    SpawnPopUpAssesment();
+        }
+
         if (nextGameButton == null &&
             GameObject.Find("Next Game Button"))
         {
             nextGameButton = GameObject.Find("Next Game Button");
             nextGameButton.GetComponent<Button>().onClick.AddListener(() => StartGame());
         }
+    }
+
+    public void OpenAssesmentRoom()
+    {
+        Application.ExternalEval("window.open('" + getQuestion.assesmentURL + "','_self')");
+    }
+
+    public void SpawnPopUpAssesment()
+    {
+        introManager.assesmentPopUp.SetActive(true);
+        introManager.assesmentPopUp.transform.GetComponentInChildren<Button>().onClick.AddListener(() => OpenAssesmentRoom());
     }
 
     public void SetupGameManager()
@@ -138,7 +163,12 @@ public class GameManager : MonoBehaviour
             if (introManager.gateDetails[i].id == int.Parse(subMasterValueId))
             {
                 introManager.gateDetails[i].gate.SetActive(true);
-                StartCoroutine(StartGate(introManager.gateDetails[i].gate));
+                
+                if (introManager.gateDetails[i].haveGate)
+                    StartCoroutine(StartGate(introManager.gateDetails[i].gate));
+                else
+                    introManager.introHandler.GetComponent<Animator>().SetTrigger("isPopUp");
+
                 break;
             }
         }
@@ -178,11 +208,17 @@ public class GameManager : MonoBehaviour
             for (int j = 0; j < questionInfos.Count; j++)
                 questionInfos[j].questionDetails.Clear();
 
+            if (getQuestion.hallType == HallType.HallPDP)
+                StartCoroutine(getQuestion.PostLastCheckpoint());
+
             javascriptHook.playerData.sub_master_value_id = $"{int.Parse(javascriptHook.playerData.sub_master_value_id) + 1}";
-            StartCoroutine(getQuestion.PostData_Coroutine());
 
             isPlay = isDone = false;
             SceneManager.LoadScene("Gate");
+
+            if (getQuestion.hallType == HallType.HallPDP)
+                if (int.Parse(javascriptHook.playerData.sub_master_value_id) <= 6)
+                    StartCoroutine(getQuestion.PostData_Coroutine());
         }
     }
 
@@ -191,28 +227,6 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(cooldownBetweenGame);
         gate.GetComponent<Animator>().SetTrigger("isPopDown");
         introManager.introHandler.GetComponent<Animator>().SetTrigger("isPopUp");
-    }
-
-    public IEnumerator GetAudioClip(string mediaURL, string audioURL)
-    {
-        using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(audioURL, AudioType.MPEG))
-        {
-            yield return www.SendWebRequest();
-            if (www.isNetworkError)
-                Debug.Log(www.error);
-            else
-            {
-                introManager.videoHandler.GetComponent<VideoPlayer>().url = mediaURL;
-                introManager.videoHandler.GetComponent<AudioSource>().clip = DownloadHandlerAudioClip.GetContent(www);
-
-                introManager.videoHandler.GetComponent<VideoPlayer>().audioOutputMode = VideoAudioOutputMode.None;
-                introManager.videoHandler.GetComponent<VideoPlayer>().EnableAudioTrack(0, false);
-                introManager.videoHandler.GetComponent<VideoPlayer>().SetDirectAudioMute(0, true);
-
-                introManager.videoHandler.GetComponent<VideoPlayer>().Play();
-                introManager.videoHandler.GetComponent<AudioSource>().Play();
-            }
-        }
     }
 
     public static string HTMLToText(string HTMLCode)

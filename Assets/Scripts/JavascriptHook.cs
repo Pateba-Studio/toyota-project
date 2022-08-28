@@ -13,6 +13,7 @@ public class PlayerData
 
 public class JavascriptHook : MonoBehaviour
 {
+    public bool isInitialized;
     public PlayerData playerData;
 
     public void PlayerEmailHandler(string email)
@@ -23,6 +24,7 @@ public class JavascriptHook : MonoBehaviour
     public void PlayerTicketHandler(string ticket)
     {
         playerData.ticket = ticket;
+        isInitialized = true;
     }
 
     public void PlayerSubMasterValueHandler(string sub)
