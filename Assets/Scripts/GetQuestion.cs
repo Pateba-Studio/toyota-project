@@ -93,6 +93,8 @@ public class GetQuestion : MonoBehaviour
     public HallType hallType;
 
     [Header("Question Hook Attribute")]
+    [TextArea(2, 2)] public string hallABURL;
+    [TextArea(2, 2)] public string hallPDPURL;
     [TextArea(2, 2)] public string assesmentURL;
     [TextArea(2, 2)] public string postCheckpointURL;
     [TextArea(2, 2)] public string getCheckpointURL;
@@ -120,7 +122,7 @@ public class GetQuestion : MonoBehaviour
         if (playerDataHandler.isInitialized)
         {
             if (hallType == HallType.HallPDP)
-                StartCoroutine(PostLastCheckpoint());
+                StartCoroutine(GetLastCheckpoint());
             else
                 StartCoroutine(PostData_Coroutine());
             

@@ -30,7 +30,7 @@ public class QuizManager : MonoBehaviour
     [Header("Panel Attribute")]
     public GameObject correctPanel;
     public GameObject wrongPanel;
-    public GameObject gameOverPanel;
+    public GameObject[] gameOver;
 
     List<SoalData> unansweredQuestions;
     SoalData currentQuestion;
@@ -61,7 +61,38 @@ public class QuizManager : MonoBehaviour
                 FindObjectOfType<AudioManager>().Play("GameOverSFX");
             }
 
-            gameOverPanel.SetActive(true);
+            bool isDone = false;
+            for (int j = 0; j < gameManager.questionInfos.Count; j++)
+            {
+                if (gameManager.questionInfos[j].questionDetails.Count > 0)
+                {
+                    isDone = false;
+                    break;
+                }
+                else
+                    isDone = true;
+            }
+
+            if (gameManager.getQuestion.hallType == HallType.HallPDP)
+            {
+                if (!isDone) gameOver[0].SetActive(true);
+                else gameOver[int.Parse(gameManager.subMasterValueId) - 1].SetActive(true);
+
+                StartCoroutine(gameManager.StartGame(2.5f));
+            }
+            else
+            {
+                if (isDone)
+                {
+                    gameOver[1].SetActive(true);
+                    gameManager.OpenRoom(gameManager.getQuestion.hallABURL);
+                }
+                else
+                {
+                    gameOver[0].SetActive(true);
+                    StartCoroutine(gameManager.StartGame(2.5f));
+                }
+            }
         }
     }
 
@@ -155,6 +186,8 @@ public class QuizManager : MonoBehaviour
 
                     SetQuestion(j, mediaURL, audioURL, jsonSoal, jsonAnswer, jsonCorrectAnswer);
                 }
+
+                gameManager.questionInfos[i].questionDetails.Clear();
             }
         }
 
@@ -235,8 +268,7 @@ public class QuizManager : MonoBehaviour
     {
         yield return new WaitForSeconds(timeBetweenQuestions);
         isWin = true;
-        yield return new WaitForSeconds(timeBetweenQuestions * 2f);
-        gameManager.StartGame();
+        StartCoroutine(gameManager.StartGame(2.5f));
     }
 
     IEnumerator ProcessImageAttribute(string mediaURL)

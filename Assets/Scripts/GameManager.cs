@@ -9,6 +9,7 @@ using UnityEngine.Networking;
 using UnityEngine.Video;
 using System.IO;
 
+#region QuestionClass
 [System.Serializable]
 public class AnswerDetails
 {
@@ -33,16 +34,15 @@ public class QuestionInfo
     public string gameType;
     public List<QuestionDetails> questionDetails;
 }
+#endregion
 
 public class GameManager : MonoBehaviour
 {
     public bool isPlay;
     public bool isDone;
-    public bool haveGate;
     public int gameIndex;
     public float cooldownBetweenGame;
     public string subMasterValueId;
-    public GameObject nextGameButton;
     public JavascriptHook javascriptHook;
     public GetQuestion getQuestion;
     public IntroManager introManager;
@@ -75,24 +75,17 @@ public class GameManager : MonoBehaviour
                     !introManager.assesmentPopUp.activeInHierarchy)
                     SpawnPopUpAssesment();
         }
-
-        if (nextGameButton == null &&
-            GameObject.Find("Next Game Button"))
-        {
-            nextGameButton = GameObject.Find("Next Game Button");
-            nextGameButton.GetComponent<Button>().onClick.AddListener(() => StartGame());
-        }
     }
 
-    public void OpenAssesmentRoom()
+    public void OpenRoom(string url)
     {
-        Application.ExternalEval("window.open('" + getQuestion.assesmentURL + "','_self')");
+        Application.ExternalEval("window.open('" + url + "','_self')");
     }
 
     public void SpawnPopUpAssesment()
     {
         introManager.assesmentPopUp.SetActive(true);
-        introManager.assesmentPopUp.transform.GetComponentInChildren<Button>().onClick.AddListener(() => OpenAssesmentRoom());
+        introManager.assesmentPopUp.transform.GetComponentInChildren<Button>().onClick.AddListener(() => OpenRoom(getQuestion.assesmentURL));
     }
 
     public void SetupGameManager()
@@ -163,11 +156,14 @@ public class GameManager : MonoBehaviour
             if (introManager.gateDetails[i].id == int.Parse(subMasterValueId))
             {
                 introManager.gateDetails[i].gate.SetActive(true);
-                
+
                 if (introManager.gateDetails[i].haveGate)
                     StartCoroutine(StartGate(introManager.gateDetails[i].gate));
                 else
+                {
+                    introManager.gateDetails[i].gate.SetActive(true);
                     introManager.introHandler.GetComponent<Animator>().SetTrigger("isPopUp");
+                }
 
                 break;
             }
@@ -176,8 +172,9 @@ public class GameManager : MonoBehaviour
         isPlay = true;
     }
 
-    public void StartGame()
+    public IEnumerator StartGame(float times)
     {
+        yield return new WaitForSeconds(times);
         for (int i = 0; i < questionInfos.Count; i++)
         {
             if (SceneManager.GetActiveScene().name == questionInfos[i].gameType)
@@ -209,16 +206,16 @@ public class GameManager : MonoBehaviour
                 questionInfos[j].questionDetails.Clear();
 
             if (getQuestion.hallType == HallType.HallPDP)
+            {
                 StartCoroutine(getQuestion.PostLastCheckpoint());
+                javascriptHook.playerData.sub_master_value_id = $"{int.Parse(javascriptHook.playerData.sub_master_value_id) + 1}";
 
-            javascriptHook.playerData.sub_master_value_id = $"{int.Parse(javascriptHook.playerData.sub_master_value_id) + 1}";
+                isPlay = isDone = false;
+                SceneManager.LoadScene("Gate");
 
-            isPlay = isDone = false;
-            SceneManager.LoadScene("Gate");
-
-            if (getQuestion.hallType == HallType.HallPDP)
                 if (int.Parse(javascriptHook.playerData.sub_master_value_id) <= 6)
                     StartCoroutine(getQuestion.PostData_Coroutine());
+            }
         }
     }
 

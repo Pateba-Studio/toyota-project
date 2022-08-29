@@ -17,7 +17,7 @@ public class ArcherManager : MonoBehaviour
     [Header("Panel Attributes")]
     public GameObject correctPanel;
     public GameObject wrongPanel;
-    public GameObject gameOver;
+    public GameObject[] gameOver;
 
     [Header("Question Attributes")]
     public GameObject videoHandler;
@@ -105,16 +105,43 @@ public class ArcherManager : MonoBehaviour
 
                     totalQuestion = gameManager.questionInfos[i].questionDetails.Count;
                     if (totalQuestion > 0)
-                    {
                         StartCoroutine(SetQuestion());
-                    }
                     else
                     {
                         FindObjectOfType<AudioManager>().Play("GameOverSFX");
-                        gameOver.SetActive(true);
 
-                        yield return new WaitForSeconds(2.5f);
-                        gameManager.StartGame();
+                        bool isDone = false;
+                        for (int j = 0; j < gameManager.questionInfos.Count; j++)
+                        {
+                            if (gameManager.questionInfos[j].questionDetails.Count > 0)
+                            {
+                                isDone = false;
+                                break;
+                            }
+                            else
+                                isDone = true;
+                        }
+
+                        if (gameManager.getQuestion.hallType == HallType.HallPDP)
+                        {
+                            if (!isDone) gameOver[0].SetActive(true);
+                            else gameOver[int.Parse(gameManager.subMasterValueId) - 1].SetActive(true);
+
+                            StartCoroutine(gameManager.StartGame(2.5f));
+                        }
+                        else
+                        {
+                            if (isDone)
+                            {
+                                gameOver[1].SetActive(true);
+                                gameManager.OpenRoom(gameManager.getQuestion.hallABURL);
+                            }
+                            else
+                            {
+                                gameOver[0].SetActive(true);
+                                StartCoroutine(gameManager.StartGame(2.5f));
+                            }
+                        }
                     }
                 }
                 break;

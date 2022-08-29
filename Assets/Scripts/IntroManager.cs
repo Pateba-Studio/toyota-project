@@ -34,6 +34,7 @@ public class IntroManager : MonoBehaviour
     public bool isDone;
     public GameManager gameManager;
     public GameObject assesmentPopUp;
+    public GameObject generalPanel;
     public GameObject nextButton;
     public GameObject instructionText;
     public GameObject introHandler;
@@ -57,11 +58,6 @@ public class IntroManager : MonoBehaviour
         isDone = !Convert.ToBoolean(introInfo.Count);
     }
 
-    public void OpenLink(string targetURL)
-    {
-        Application.OpenURL(targetURL);
-    }
-
     public void EndReached(VideoPlayer vp)
     {
         videoHandler.SetActive(false);
@@ -75,7 +71,7 @@ public class IntroManager : MonoBehaviour
             StartIntro();
             introInfo.RemoveAt(0);
         }
-        else gameManager.StartGame();
+        else StartCoroutine(gameManager.StartGame(0f));
     }
 
     public void StartIntro()
