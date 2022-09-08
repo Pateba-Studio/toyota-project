@@ -3052,6 +3052,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1345298732}
   speed: 1
+  touchStart: 0
   circle: {fileID: 686954916}
   outerCircle: {fileID: 1212732891}
   spriteRenderer: {fileID: 686954915}
@@ -3646,6 +3647,7 @@ MonoBehaviour:
   bulleyeC: {fileID: 1353051825}
   bulleyeD: {fileID: 1081766816}
   archerManager: {fileID: 2074491678}
+  bowController: {fileID: 686954914}
 --- !u!1 &825624428
 GameObject:
   m_ObjectHideFlags: 0

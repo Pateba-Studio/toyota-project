@@ -8,7 +8,7 @@ public class BowController : MonoBehaviour
 {
   public Transform player; //get crosshair object pos data
   public float speed = 5.0f; //speed handle movement crosshair and bow
-  private bool touchStart = false;
+  public bool touchStart = false;
   private Vector2 pointA; //point that directed into the holding mouse input/touch input pos
   private Vector2 pointB; //point that directed into the mouse input/touch input pos
 
@@ -25,6 +25,7 @@ public class BowController : MonoBehaviour
     {
       pointA = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
     }
+
     //check the data first generated input 
     if (Input.GetMouseButton(0))
     {
