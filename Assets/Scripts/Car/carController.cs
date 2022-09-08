@@ -50,12 +50,24 @@ public class carController : MonoBehaviour {
             StartCoroutine(CarBlink());
         else if (collision.gameObject.tag == "Wrong Answer")
         {
-            StartCoroutine(CarBlink());
-            StartCoroutine(carManager.SpawnPanel(false));
-        }
-        else if (collision.gameObject.tag == "Correct Answer")
-        {
-            StartCoroutine(carManager.SpawnPanel(true));
+            if (collision.gameObject.transform.position.x < 0)
+            {
+                if (gameObject.transform.position.x < 0)
+                {
+                    StartCoroutine(CarBlink());
+                    StartCoroutine(carManager.SpawnPanel(false));
+                }
+                else StartCoroutine(carManager.SpawnPanel(true));
+            }
+            else
+            {
+                if (gameObject.transform.position.x >= 0)
+                {
+                    StartCoroutine(CarBlink());
+                    StartCoroutine(carManager.SpawnPanel(false));
+                }
+                else StartCoroutine(carManager.SpawnPanel(true));
+            }
         }
     }
     

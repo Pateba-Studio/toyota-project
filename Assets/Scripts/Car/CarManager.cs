@@ -117,8 +117,8 @@ public class CarManager : MonoBehaviour
         Vector3 pos = new Vector3(wrong, wrongAnswer.transform.position.y, wrongAnswer.transform.position.z);
         Instantiate(wrongAnswer, pos, wrongAnswer.transform.rotation);
 
-        pos = new Vector3(correct, wrongAnswer.transform.position.y, wrongAnswer.transform.position.z);
-        Instantiate(correctAnswer, pos, correctAnswer.transform.rotation);
+        //pos = new Vector3(correct, wrongAnswer.transform.position.y, wrongAnswer.transform.position.z);
+        //Instantiate(correctAnswer, pos, correctAnswer.transform.rotation);
     }
 
     public IEnumerator SpawnPanel(bool cond)
