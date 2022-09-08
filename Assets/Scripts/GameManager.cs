@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using UnityEngine.Video;
 using System.IO;
+using DG.Tweening.Core.Easing;
 
 #region QuestionClass
 [System.Serializable]
@@ -38,8 +39,11 @@ public class QuestionInfo
 
 public class GameManager : MonoBehaviour
 {
+    public bool isFirstLaunched;
     public bool isPlay;
     public bool isDone;
+    public bool assesmentIsDone;
+    public bool statusIsGot;
     public int gameIndex;
     public float cooldownBetweenGame;
     public string subMasterValueId;
@@ -65,31 +69,47 @@ public class GameManager : MonoBehaviour
     {
         subMasterValueId = javascriptHook.playerData.sub_master_value_id;
 
-        if (SceneManager.GetActiveScene().name == "Gate")
+        if (int.Parse(javascriptHook.playerData.sub_master_value_id) > 6 && 
+            SceneManager.GetActiveScene().name == "Gate" &&
+            statusIsGot)
         {
             introManager = GameObject.Find("Intro Manager").GetComponent<IntroManager>();
             getQuestion.introManager = introManager;
 
-            if (getQuestion.hallType == HallType.HallPDP)
-                if (int.Parse(javascriptHook.playerData.sub_master_value_id) > 6 &&
-                    !introManager.assesmentPopUp.activeInHierarchy)
+            if (getQuestion.hallType == HallType.PDP)
+            {
+                if (!assesmentIsDone)
                     SpawnPopUpAssesment();
+                else if (assesmentIsDone)
+                    StartCoroutine(OpenRoom(getQuestion.notifAssessmentSuccessURL));
+
+                statusIsGot = false;
+            }
         }
     }
 
-    public void OpenRoom(string url)
+    public IEnumerator OpenRoom(string url)
     {
+        yield return new WaitForSeconds(1f);
         Application.ExternalEval("window.open('" + url + "','_self')");
     }
 
     public void SpawnPopUpAssesment()
     {
         introManager.assesmentPopUp.SetActive(true);
-        introManager.assesmentPopUp.transform.GetComponentInChildren<Button>().onClick.AddListener(() => OpenRoom(getQuestion.assesmentURL));
+        introManager.assesmentPopUp.transform.GetComponentInChildren<Button>().onClick.AddListener(() => StartCoroutine(OpenRoom(getQuestion.assesmentURL)));
+    }
+
+    public void SpawnInitializeIntro()
+    {
+        introManager.introHandler[0].GetComponent<Animator>().SetTrigger("isPopUp");
+        introManager.StartInitializeIntro();
+        isFirstLaunched = false;
     }
 
     public void SetupGameManager()
     {
+        introManager.introHandler[0].GetComponent<Animator>().SetTrigger("isPopDown");
         subMasterValueId = javascriptHook.playerData.sub_master_value_id;
         
         // setup questions
@@ -158,17 +178,73 @@ public class GameManager : MonoBehaviour
                 introManager.gateDetails[i].gate.SetActive(true);
 
                 if (introManager.gateDetails[i].haveGate)
+                {
+                    introManager.titleText[1].GetComponent<Text>().text = introManager.gateDetails[i].booth_type;
                     StartCoroutine(StartGate(introManager.gateDetails[i].gate));
+                }
                 else
                 {
                     introManager.gateDetails[i].gate.SetActive(true);
-                    introManager.introHandler.GetComponent<Animator>().SetTrigger("isPopUp");
+                    introManager.titleText[1].GetComponent<Text>().text = introManager.gateDetails[i].booth_type;
+                    introManager.introHandler[1].GetComponent<Animator>().SetTrigger("isPopUp");
                 }
 
                 break;
             }
         }
 
+        isPlay = true;
+    }
+
+    public void SetupGameManagerInAB()
+    {
+        subMasterValueId = javascriptHook.playerData.sub_master_value_id;
+
+        // setup questions
+        for (int i = 0; i < getQuestion.questionData.data.Count; i++)
+        {
+            for (int j = 0; j < questionInfos.Count; j++)
+            {
+                if (getQuestion.questionData.data[i].game_type == questionInfos[j].gameType)
+                {
+                    var getQuest = getQuestion.questionData.data[i];
+                    var question = new QuestionDetails();
+
+                    question.id = getQuest.id;
+                    question.question = getQuest.question;
+                    question.media = getQuest.media;
+                    question.audio = getQuest.audio;
+
+                    questionInfos[j].questionDetails.Add(question);
+                }
+            }
+        }
+
+        // setup answers
+        for (int i = 0; i < questionInfos.Count; i++)
+        {
+            for (int j = 0; j < questionInfos[i].questionDetails.Count; j++)
+            {
+                for (int k = 0; k < getQuestion.questionData.data.Count; k++)
+                {
+                    if (questionInfos[i].questionDetails[j].question ==
+                        getQuestion.questionData.data[k].question)
+                    {
+                        questionInfos[i].questionDetails[j].answerDetails = new AnswerDetails[getQuestion.questionData.data[k].answers.Count];
+                        for (int l = 0; l < getQuestion.questionData.data[k].answers.Count; l++)
+                        {
+                            questionInfos[i].questionDetails[j].answerDetails[l] = new AnswerDetails();
+                            questionInfos[i].questionDetails[j].answerDetails[l].id = getQuestion.questionData.data[k].answers[l].id;
+                            questionInfos[i].questionDetails[j].answerDetails[l].answer = getQuestion.questionData.data[k].answers[l].answer;
+                            if (questionInfos[i].questionDetails[j].answerDetails[l].answer == getQuestion.questionData.data[k].answer_correct.answer)
+                                questionInfos[i].questionDetails[j].answerDetails[l].isCorrect = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        StartCoroutine(StartGame(0f));
         isPlay = true;
     }
 
@@ -205,7 +281,7 @@ public class GameManager : MonoBehaviour
             for (int j = 0; j < questionInfos.Count; j++)
                 questionInfos[j].questionDetails.Clear();
 
-            if (getQuestion.hallType == HallType.HallPDP)
+            if (getQuestion.hallType == HallType.PDP)
             {
                 StartCoroutine(getQuestion.PostLastCheckpoint());
                 javascriptHook.playerData.sub_master_value_id = $"{int.Parse(javascriptHook.playerData.sub_master_value_id) + 1}";
@@ -223,7 +299,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(cooldownBetweenGame);
         gate.GetComponent<Animator>().SetTrigger("isPopDown");
-        introManager.introHandler.GetComponent<Animator>().SetTrigger("isPopUp");
+        introManager.introHandler[1].GetComponent<Animator>().SetTrigger("isPopUp");
     }
 
     public static string HTMLToText(string HTMLCode)

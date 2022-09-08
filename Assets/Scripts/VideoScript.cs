@@ -18,16 +18,29 @@ public class VideoDetail
 
 public class VideoScript : MonoBehaviour
 {
+    public bool isFullScreen;
+    public GameObject videoFullScreen;
     public VideoDetail videoDetails;
     public VideoPlayer videoPlayer;
     public AudioSource audioSource;
-    public GameObject replayButton;
+    public RenderTexture targetTexture;
+    public GameObject[] buttonNormalScreen;
+    public GameObject[] buttonFullScreen;
     public UnityEvent videoIsFinished;
+
+    void Update()
+    {
+        if (gameObject.activeInHierarchy)
+            SetVideoCanvas();
+    }
 
     void EndReached(VideoPlayer vp)
     {
         videoIsFinished.Invoke();
-        replayButton.SetActive(true);
+        audioSource.Stop();
+
+        if (isFullScreen)
+            SetFullScreen();
     }
 
     public void PlayVideo()
@@ -35,7 +48,6 @@ public class VideoScript : MonoBehaviour
         videoPlayer.loopPointReached += EndReached;
         videoPlayer.gameObject.SetActive(true);
         audioSource.gameObject.SetActive(true);
-        replayButton.SetActive(false);
         StartCoroutine(GetAudioClip());
     }
 
@@ -45,8 +57,44 @@ public class VideoScript : MonoBehaviour
         videoPlayer.loopPointReached += EndReached;
         videoPlayer.gameObject.SetActive(true);
         audioSource.gameObject.SetActive(true);
-        replayButton.SetActive(false);
         StartCoroutine(GetAudioClip());
+    }
+
+    public void SetFullScreen()
+    {
+        if (!isFullScreen)
+        {
+            if (!videoPlayer.isPlaying)
+                PlayVideo();
+
+            videoFullScreen.SetActive(true);
+            isFullScreen = true;
+        }
+        else
+        {
+            videoFullScreen.SetActive(false);
+            isFullScreen = false;
+        }
+    }
+
+    public void SetVideoCanvas()
+    {
+        if (!isFullScreen)
+        {
+            for (int i = 0; i < buttonNormalScreen.Length; i++)
+                buttonNormalScreen[i].SetActive(true);
+
+            for (int i = 0; i < buttonFullScreen.Length; i++)
+                buttonFullScreen[i].SetActive(false);
+        }
+        else
+        {
+            for (int i = 0; i < buttonNormalScreen.Length; i++)
+                buttonNormalScreen[i].SetActive(false);
+
+            for (int i = 0; i < buttonFullScreen.Length; i++)
+                buttonFullScreen[i].SetActive(true);
+        }
     }
 
     IEnumerator GetAudioClip()

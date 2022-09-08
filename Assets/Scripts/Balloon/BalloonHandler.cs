@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class BalloonHandler : MonoBehaviour
 {
@@ -28,7 +29,8 @@ public class BalloonHandler : MonoBehaviour
 
     public void ChooseBaloon()
     {
-        if (baloonManager.isPlay) 
+        if (baloonManager.isPlay &&
+            baloonManager.videoHandler.GetComponent<VideoScript>().videoPlayer.renderMode != VideoRenderMode.CameraNearPlane) 
         {
             GetComponent<Animator>().SetTrigger("isPopOut");
             StartCoroutine(DestroyBaloon()); 

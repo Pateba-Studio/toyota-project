@@ -108,7 +108,7 @@ public class BaloonManager : MonoBehaviour
         else { wrongPanel.SetActive(true); FindObjectOfType<AudioManager>().Play("WrongSFX"); }
 
         isPlay = false;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
         isPlay = true;
 
         Destroy(baloon);
@@ -147,7 +147,7 @@ public class BaloonManager : MonoBehaviour
                         isDone = true;
                 }
 
-                if (gameManager.getQuestion.hallType == HallType.HallPDP)
+                if (gameManager.getQuestion.hallType == HallType.PDP)
                 {
                     if (!isDone) gameOver[0].SetActive(true);
                     else gameOver[int.Parse(gameManager.subMasterValueId) - 1].SetActive(true);
@@ -159,7 +159,8 @@ public class BaloonManager : MonoBehaviour
                     if (isDone)
                     {
                         gameOver[1].SetActive(true);
-                        gameManager.OpenRoom(gameManager.getQuestion.hallABURL);
+                        StartCoroutine(gameManager.getQuestion.PostLastCheckpoint());
+                        //StartCoroutine(gameManager.OpenRoom(gameManager.getQuestion.hallABURL));
                     }
                     else
                     {
@@ -177,5 +178,6 @@ public class BaloonManager : MonoBehaviour
         yield return wwwLoader;
 
         imageHandler.GetComponent<Image>().sprite = Sprite.Create(wwwLoader.texture, new Rect(0, 0, wwwLoader.texture.width, wwwLoader.texture.height), new Vector2(0, 0));
+        imageHandler.GetComponent<Image>().preserveAspect = true;
     }
 }

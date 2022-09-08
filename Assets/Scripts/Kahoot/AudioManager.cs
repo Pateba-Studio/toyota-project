@@ -1,10 +1,11 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
-    
+    public AudioSource bgmSource;
     public Sound[] sounds;
     public static AudioManager instance;
 
@@ -33,6 +34,14 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         //Play("Theme");
+    }
+
+    void Update()
+    {
+        if (SceneManager.GetActiveScene().name == "Gate")
+            bgmSource.mute = true;
+        else
+            bgmSource.mute = false;
     }
 
     public void ButtonClick()

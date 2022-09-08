@@ -73,7 +73,7 @@ public class QuizManager : MonoBehaviour
                     isDone = true;
             }
 
-            if (gameManager.getQuestion.hallType == HallType.HallPDP)
+            if (gameManager.getQuestion.hallType == HallType.PDP)
             {
                 if (!isDone) gameOver[0].SetActive(true);
                 else gameOver[int.Parse(gameManager.subMasterValueId) - 1].SetActive(true);
@@ -85,7 +85,8 @@ public class QuizManager : MonoBehaviour
                 if (isDone)
                 {
                     gameOver[1].SetActive(true);
-                    gameManager.OpenRoom(gameManager.getQuestion.hallABURL);
+                    StartCoroutine(gameManager.getQuestion.PostLastCheckpoint());
+                    //StartCoroutine(gameManager.OpenRoom(gameManager.getQuestion.hallABURL));
                 }
                 else
                 {
@@ -210,27 +211,28 @@ public class QuizManager : MonoBehaviour
 
     public void UserSelectTrue(int i)
     {
-        if (currentQuestion.Jawaban[i].isTrue)
+        if (videoHandler.GetComponent<VideoScript>().videoPlayer.renderMode != VideoRenderMode.CameraNearPlane)
         {
-            isWin = false;
-            soalCounter++;
+            if (currentQuestion.Jawaban[i].isTrue)
+            {
+                isWin = false;
+                soalCounter++;
 
-            StartCoroutine(CorrectAnswer());
-           
-            if (soalCounter < jumlahSoal)
-                StartCoroutine(TransitionToNextQuestion());
+                StartCoroutine(CorrectAnswer());
 
-            logoTAM.SetActive(true);
-            videoHandler.SetActive(false);
-            imageHandler.SetActive(false);
+                if (soalCounter < jumlahSoal)
+                    StartCoroutine(TransitionToNextQuestion());
 
-
-        }
-        else
-        {
-            isWin = false;
-            DisableAnswer(i);
-            StartCoroutine(WrongAnswer());
+                logoTAM.SetActive(true);
+                videoHandler.SetActive(false);
+                imageHandler.SetActive(false);
+            }
+            else
+            {
+                isWin = false;
+                DisableAnswer(i);
+                StartCoroutine(WrongAnswer());
+            }
         }
     }
 
@@ -252,7 +254,7 @@ public class QuizManager : MonoBehaviour
     {
         correctPanel.SetActive(true);
         FindObjectOfType<AudioManager>().Play("CorrectSFX");
-        yield return new WaitForSeconds(timeBetweenQuestions);
+        yield return new WaitForSeconds(3f);
         correctPanel.SetActive(false);
     }
 
@@ -260,7 +262,7 @@ public class QuizManager : MonoBehaviour
     {
         wrongPanel.SetActive(true);
         FindObjectOfType<AudioManager>().Play("WrongSFX");
-        yield return new WaitForSeconds(timeBetweenQuestions);
+        yield return new WaitForSeconds(3f);
         wrongPanel.SetActive(false);
     }
 
@@ -277,5 +279,6 @@ public class QuizManager : MonoBehaviour
         yield return wwwLoader;
 
         imageHandler.GetComponent<Image>().sprite = Sprite.Create(wwwLoader.texture, new Rect(0, 0, wwwLoader.texture.width, wwwLoader.texture.height), new Vector2(0, 0));
+        imageHandler.GetComponent<Image>().preserveAspect = true;
     }
 }

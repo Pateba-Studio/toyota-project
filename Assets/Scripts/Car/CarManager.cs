@@ -128,7 +128,7 @@ public class CarManager : MonoBehaviour
         if (cond) { correctPanel.SetActive(true); FindObjectOfType<AudioManager>().Play("CorrectSFX"); }
         else { wrongPanel.SetActive(true); FindObjectOfType<AudioManager>().Play("WrongSFX"); }
         
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
 
         correctPanel.SetActive(false);
         wrongPanel.SetActive(false);
@@ -159,7 +159,7 @@ public class CarManager : MonoBehaviour
                             isDone = true;
                     }
 
-                    if (gameManager.getQuestion.hallType == HallType.HallPDP)
+                    if (gameManager.getQuestion.hallType == HallType.PDP)
                     {
                         if (!isDone) gameOver[0].SetActive(true);
                         else gameOver[int.Parse(gameManager.subMasterValueId) - 1].SetActive(true);
@@ -171,7 +171,8 @@ public class CarManager : MonoBehaviour
                         if (isDone)
                         {
                             gameOver[1].SetActive(true);
-                            gameManager.OpenRoom(gameManager.getQuestion.hallABURL);
+                            StartCoroutine(gameManager.getQuestion.PostLastCheckpoint());
+                            //StartCoroutine(gameManager.OpenRoom(gameManager.getQuestion.hallABURL));
                         }
                         else
                         {
@@ -192,5 +193,6 @@ public class CarManager : MonoBehaviour
         yield return wwwLoader;
 
         imageHandler.GetComponent<Image>().sprite = Sprite.Create(wwwLoader.texture, new Rect(0, 0, wwwLoader.texture.width, wwwLoader.texture.height), new Vector2(0, 0));
+        imageHandler.GetComponent<Image>().preserveAspect = true;
     }
 }

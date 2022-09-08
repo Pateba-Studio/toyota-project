@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Video;
 
 public class carController : MonoBehaviour {
     public float carSpeed = 10f;
@@ -89,13 +90,19 @@ public class carController : MonoBehaviour {
 
     public void MoveRight()
     {
-        transform.position += Vector3.right * carSpeed * Time.deltaTime;
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 330), Time.deltaTime*3);
+        if (carManager.videoHandler.GetComponent<VideoScript>().videoPlayer.renderMode != VideoRenderMode.CameraNearPlane)
+        {
+            transform.position += Vector3.right * carSpeed * Time.deltaTime;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 330), Time.deltaTime * 3);
+        }
     }
 
     public void SetVelocityZero()
     {
-        rb.velocity = Vector2.zero;
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 8);
+        if (carManager.videoHandler.GetComponent<VideoScript>().videoPlayer.renderMode != VideoRenderMode.CameraNearPlane)
+        {
+            rb.velocity = Vector2.zero;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 8);
+        }
     }
 }

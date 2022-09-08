@@ -6,7 +6,14 @@ using UnityEngine;
 
 public enum HallType
 {
-    HallAB, HallPDP
+    AB, PDP
+}
+
+[System.Serializable]
+public class AssesmentStatus
+{
+    public bool success;
+    public string assesment_status;
 }
 
 #region CheckpointClass
@@ -88,28 +95,46 @@ public class IntroData
 }
 #endregion
 
+#region InitializeIntro
+[System.Serializable]
+public class Datums
+{
+    public int id;
+    public string master_value;
+    public string media;
+    public string audio;
+}
+
+[System.Serializable]
+public class InitializeIntro
+{
+    public bool success;
+    public List<Datums> data;
+}
+#endregion
+
 public class GetQuestion : MonoBehaviour
 {
     public HallType hallType;
 
     [Header("Question Hook Attribute")]
     [TextArea(2, 2)] public string hallABURL;
-    [TextArea(2, 2)] public string hallPDPURL;
+    [TextArea(2, 2)] public string notifAssessmentSuccessURL;
     [TextArea(2, 2)] public string assesmentURL;
+    [TextArea(2, 2)] public string getAssesmentStatusURL;
     [TextArea(2, 2)] public string postCheckpointURL;
     [TextArea(2, 2)] public string getCheckpointURL;
     [TextArea(2, 2)] public string questionURL;
+    [TextArea(2, 2)] public string initializeIntroURL;
     [TextArea(2, 2)] public string introURL;
     public JavascriptHook playerDataHandler;
     public IntroManager introManager;
     public GameManager gameManager;
+    public AssesmentStatus assesmentStatus;
     public CheckpointData checkpointData;
     public QuestionData questionData;
     public IntroData introData;
-
-    string jsonCheckpoint;
-    string jsonQuestion;
-    string jsonIntro;
+    public InitializeIntro initializeIntro;
 
     // Start is called before the first frame update
     void Start()
@@ -121,8 +146,8 @@ public class GetQuestion : MonoBehaviour
     {
         if (playerDataHandler.isInitialized)
         {
-            if (hallType == HallType.HallPDP)
-                StartCoroutine(GetLastCheckpoint());
+            if (hallType == HallType.PDP)
+                StartCoroutine(GetAssesmentStatus());
             else
                 StartCoroutine(PostData_Coroutine());
             
@@ -143,6 +168,33 @@ public class GetQuestion : MonoBehaviour
             else
             {
                 print($"POST SUCCESS!");
+
+                if (hallType == HallType.AB)
+                    StartCoroutine(gameManager.OpenRoom(gameManager.getQuestion.hallABURL));
+            }
+        }
+    }
+
+    public IEnumerator GetAssesmentStatus()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("ticket", playerDataHandler.playerData.ticket);
+        form.AddField("master_value", hallType.ToString());
+        using (UnityWebRequest request = UnityWebRequest.Post(getAssesmentStatusURL, form))
+        {
+            yield return request.SendWebRequest();
+            if (request.isNetworkError || request.isHttpError)
+                print(request.error);
+            else
+            {
+                string jsonAssesment = request.downloadHandler.text;
+                assesmentStatus = JsonUtility.FromJson<AssesmentStatus>(jsonAssesment);
+
+                if (assesmentStatus.assesment_status == "success")
+                    gameManager.assesmentIsDone = true;
+
+                gameManager.statusIsGot = true;
+                StartCoroutine(GetLastCheckpoint());
             }
         }
     }
@@ -158,14 +210,14 @@ public class GetQuestion : MonoBehaviour
                 print(request.error);
             else
             {
-                jsonCheckpoint = request.downloadHandler.text;
+                string jsonCheckpoint = request.downloadHandler.text;
                 checkpointData = JsonUtility.FromJson<CheckpointData>(jsonCheckpoint);
             }
         }
 
         int id = checkpointData.data.last_checkpoint.sub_master_value_id + 1;
 
-        if (id < 3) id = 3;
+        if (id <= 3 || id > 6 && gameManager.assesmentIsDone) id = 3;
         playerDataHandler.playerData.sub_master_value_id = $"{id}";
 
         if (id >= 3 && id <= 6)
@@ -184,7 +236,7 @@ public class GetQuestion : MonoBehaviour
                 print(request.error);
             else
             {
-                jsonQuestion = request.downloadHandler.text;
+                string jsonQuestion = request.downloadHandler.text;
                 questionData = JsonUtility.FromJson<QuestionData>(jsonQuestion);
             }
         }
@@ -196,11 +248,34 @@ public class GetQuestion : MonoBehaviour
                 Debug.Log(request.error);
             else
             {
-                jsonIntro = request.downloadHandler.text;
+                string jsonIntro = request.downloadHandler.text;
                 introData = JsonUtility.FromJson<IntroData>(jsonIntro);
             }
         }
 
-        gameManager.SetupGameManager();
+        if (gameManager.isFirstLaunched &&
+            hallType == HallType.PDP)
+        {
+            using (UnityWebRequest request = UnityWebRequest.Get($"{initializeIntroURL}1"))
+            {
+                yield return request.SendWebRequest();
+                if (request.isNetworkError || request.isHttpError)
+                    Debug.Log(request.error);
+                else
+                {
+                    string jsonIntro = request.downloadHandler.text;
+                    initializeIntro = JsonUtility.FromJson<InitializeIntro>(jsonIntro);
+                    introManager.initializeIntro = initializeIntro;
+                }
+            }
+
+            gameManager.SpawnInitializeIntro();
+        }
+        else if (hallType == HallType.AB)
+        {
+            gameManager.SetupGameManagerInAB();
+        }
+        else
+            gameManager.SetupGameManager();
     }
 }

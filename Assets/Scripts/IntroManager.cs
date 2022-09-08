@@ -16,7 +16,7 @@ public class GateDetails
     public bool haveGate;
     public int id;
     public string master_value;
-    public string booth_type;
+    [TextArea(2, 2)] public string booth_type;
     public GameObject gate;
 }
 
@@ -31,89 +31,114 @@ public class IntroInfo
 
 public class IntroManager : MonoBehaviour
 {
-    public bool isDone;
+    public int introIndex;
     public GameManager gameManager;
     public GameObject assesmentPopUp;
     public GameObject generalPanel;
-    public GameObject nextButton;
-    public GameObject instructionText;
-    public GameObject introHandler;
-    public GameObject videoHandler;
-    public GameObject imageHandler;
-    public GameObject textHandler;
-    public GameObject descriptionTextHandler;
+    public GameObject prevButton;
+    public GameObject[] nextButton;
+    public GameObject[] instructionText;
+    public GameObject[] introHandler;
+    public GameObject[] videoHandler;
+    public GameObject[] imageHandler;
+    public GameObject[] textHandler;
+    public GameObject[] descriptionTextHandler;
+    public GameObject[] titleText;
     public UnityEvent videoIsFinished;
+    public InitializeIntro initializeIntro;
     public List<GateDetails> gateDetails;
     public List<IntroInfo> introInfo;
 
     void Awake()
     {
-        nextButton.GetComponent<Button>().onClick.AddListener(() => NextButtonOnClicked());
         gameManager = GameObject.Find("Data Manager").GetComponent<GameManager>();
         gameManager.introManager = gameObject.GetComponent<IntroManager>();
+
+        nextButton[0].GetComponent<Button>().onClick.AddListener(() => gameManager.SetupGameManager());
+        nextButton[1].GetComponent<Button>().onClick.AddListener(() => NextButtonOnClicked(1));
+        
+        prevButton.GetComponent<Button>().onClick.AddListener(() => NextButtonOnClicked(-1));
     }
 
     void Update()
     {
-        isDone = !Convert.ToBoolean(introInfo.Count);
+        if (introIndex <= 0)
+            prevButton.SetActive(false);
+        else
+            prevButton.SetActive(true);
     }
 
     public void EndReached(VideoPlayer vp)
     {
-        videoHandler.SetActive(false);
+        videoHandler[0].SetActive(false);
+        videoHandler[1].SetActive(false);
         SetButtonAndInstruction(true, true);
     }
 
-    public void NextButtonOnClicked()
+    public void NextButtonOnClicked(int index)
     {
-        if (!isDone) 
-        { 
-            StartIntro();
-            introInfo.RemoveAt(0);
-        }
+        introIndex += index;
+        if (introIndex >= 0 && introIndex <= introInfo.Count - 1) StartIntro();
         else StartCoroutine(gameManager.StartGame(0f));
+    }
+
+    public void StartInitializeIntro()
+    {
+        titleText[0].GetComponent<Text>().text = "Intro Hall PDP";
+
+        nextButton[0].SetActive(false);
+        instructionText[0].SetActive(false);
+
+        videoHandler[0].SetActive(true);
+        videoHandler[0].GetComponent<VideoScript>().videoDetails.videoURL = initializeIntro.data[0].media;
+        videoHandler[0].GetComponent<VideoScript>().videoDetails.audioURL = initializeIntro.data[0].audio;
+
+        videoIsFinished.AddListener(() => nextButton[0].SetActive(true));
+        videoHandler[0].GetComponent<VideoScript>().PlayVideo(videoIsFinished);
     }
 
     public void StartIntro()
     {
         SetHandler(false);
 
-        if (introInfo[0].introType == "video")
+        if (introInfo[introIndex].introType == "video")
         {
             SetButtonAndInstruction(false, false);
 
-            videoHandler.SetActive(true);
-            videoHandler.GetComponent<VideoScript>().videoDetails.videoURL = introInfo[0].mediaURL;
-            videoHandler.GetComponent<VideoScript>().videoDetails.audioURL = introInfo[0].audioURL;
-            videoHandler.GetComponent<VideoScript>().PlayVideo(videoIsFinished);
+            videoHandler[1].SetActive(true);
+            videoHandler[1].GetComponent<VideoScript>().videoDetails.videoURL = introInfo[introIndex].mediaURL;
+            videoHandler[1].GetComponent<VideoScript>().videoDetails.audioURL = introInfo[introIndex].audioURL;
+
+            videoIsFinished.AddListener(() => nextButton[1].SetActive(true));
+            videoHandler[1].GetComponent<VideoScript>().PlayVideo(videoIsFinished);
         }
-        else if (introInfo[0].introType == "image")
+        else if (introInfo[introIndex].introType == "image")
         {
-            imageHandler.SetActive(true);
+            imageHandler[1].SetActive(true);
             SetButtonAndInstruction(true, false);
 
-            StartCoroutine(GetImage(introInfo[0].mediaURL));
+            StartCoroutine(GetImage(introInfo[introIndex].mediaURL));
         }
-        else if (introInfo[0].introType == "text")
+        else if (introInfo[introIndex].introType == "text")
         {
-            textHandler.SetActive(true);
+            textHandler[1].SetActive(true);
             SetButtonAndInstruction(true, false);
 
-            descriptionTextHandler.GetComponent<Text>().text = introInfo[0].description;
+            descriptionTextHandler[1].GetComponent<Text>().text = introInfo[introIndex].description;
         }
     }
 
     public void SetButtonAndInstruction(bool btn, bool instruct)
     {
-        nextButton.SetActive(btn);
-        instructionText.SetActive(instruct);
+        nextButton[1].SetActive(btn);
+        instructionText[1].SetActive(instruct);
     }
 
     public void SetHandler(bool condition)
     {
-        videoHandler.SetActive(condition);
-        imageHandler.SetActive(condition);
-        textHandler.SetActive(condition);
+        videoHandler[1].SetActive(condition);
+        imageHandler[1].SetActive(condition);
+        textHandler[1].SetActive(condition);
     }
 
     public IEnumerator GetImage(string mediaURL)
@@ -121,7 +146,8 @@ public class IntroManager : MonoBehaviour
         WWW wwwLoader = new WWW(mediaURL);
         yield return wwwLoader;
 
-        imageHandler.GetComponent<Image>().sprite = Sprite.Create(wwwLoader.texture, new Rect(0, 0, wwwLoader.texture.width, wwwLoader.texture.height), new Vector2(0, 0));
+        imageHandler[1].GetComponent<Image>().sprite = Sprite.Create(wwwLoader.texture, new Rect(0, 0, wwwLoader.texture.width, wwwLoader.texture.height), new Vector2(0, 0));
+        imageHandler[1].GetComponent<Image>().preserveAspect = true;
     }
 
     public static string HTMLToText(string HTMLCode)
@@ -149,7 +175,7 @@ public class IntroManager : MonoBehaviour
         // most common. You can add new characters in this arrays if needed
         string[] OldWords = {"&nbsp;", "&amp;", "&quot;", "&lt;",
    "&gt;", "&reg;", "&copy;", "&bull;", "&trade;","&#39;"};
-        string[] NewWords = { " ", "&", "\"", "<", ">", "®", "©", "•", "™", "\'" };
+        string[] NewWords = { " ", "&", "\"", "<", ">", "ï¿½", "ï¿½", "ï¿½", "ï¿½", "\'" };
         for (int i = 0; i < OldWords.Length; i++)
         {
             sbHTML.Replace(OldWords[i], NewWords[i]);
