@@ -13,7 +13,7 @@ public class ArrowAnimation : MonoBehaviour
   public GameObject bulleyeA, bulleyeB, bulleyeC, bulleyeD;
 
   public ArcherManager archerManager;
-  public GameObject bowController;
+  public BowController bowController;
 
   private float timeCount = 3f;
   private float remainingTime = 0f;
@@ -36,15 +36,15 @@ public class ArrowAnimation : MonoBehaviour
 
     if (Input.GetMouseButtonUp(0))
     {
-      bowController.GetComponent<BowController>().enabled = false;
+      bowController.enabled = false;
 
-      if (bowController.GetComponent<BowController>().enabled == false)
+      if (bowController.enabled == false)
       {
         _animator.SetTrigger("Shooting");
 
         if (hit.collider == null)
         {
-          bowController.GetComponent<BowController>().enabled = true;
+          bowController.enabled = true;
           return;
         }
         else if (hit.collider.name == "A")
@@ -67,8 +67,6 @@ public class ArrowAnimation : MonoBehaviour
           StartCoroutine(ShowArrowShooted(arrowD, bulleyeD));
           archerManager.ChooseAnswer(3);
         }
-
-        bowController.GetComponent<BowController>().enabled = true;
       }
     }
   }
