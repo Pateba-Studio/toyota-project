@@ -67,7 +67,7 @@ a {
 .progress {
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 20%;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
@@ -78,12 +78,12 @@ a {
   height: 20%;
 }
 .webgl-content .progress {
-  height: 18px;
-  width: 141px;
+  height: 25px;
+  width: 193px;
   margin-top: 90px;
 }
 .webgl-content .progress .empty {
-  background: url("../images/progress-bar-empty-light.png") no-repeat right /
+  background: url("../images/progress-custom-empty.png") no-repeat right /
     cover;
   float: right;
   width: 100%;
@@ -91,7 +91,7 @@ a {
   display: inline-block;
 }
 .webgl-content .progress .full {
-  background: url("../images/progress-bar-full-light.png") no-repeat left /
+  background: url("../images/progress-custom-full.png") no-repeat left /
     cover;
   float: left;
   width: 0%;
