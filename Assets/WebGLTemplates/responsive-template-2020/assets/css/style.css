@@ -6,7 +6,8 @@
 }
 
 body {
-  background: #000;
+  background: url("../images/background-webgl.jpg") no-repeat center / cover;
+  /*background: #000;*/
   color: #999;
   font-size: 17px;
 }
@@ -80,7 +81,7 @@ a {
 .webgl-content .progress {
   height: 25px;
   width: 193px;
-  margin-top: 90px;
+  margin-top: 125px;
 }
 .webgl-content .progress .empty {
   background: url("../images/progress-custom-empty.png") no-repeat right /

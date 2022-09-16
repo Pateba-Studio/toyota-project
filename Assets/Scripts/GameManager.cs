@@ -78,11 +78,12 @@ public class GameManager : MonoBehaviour
 
             if (getQuestion.hallType == HallType.PDP)
             {
-                if (!assesmentIsDone)
-                    SpawnPopUpAssesment();
-                else if (assesmentIsDone)
-                    StartCoroutine(OpenRoom(getQuestion.notifAssessmentSuccessURL));
+                //if (!assesmentIsDone)
+                //    SpawnPopUpAssesment();
+                //else if (assesmentIsDone)
+                //    StartCoroutine(OpenRoom(getQuestion.notifAssessmentSuccessURL));
 
+                SpawnPopUpAssesment();
                 statusIsGot = false;
             }
         }
@@ -196,7 +197,7 @@ public class GameManager : MonoBehaviour
         isPlay = true;
     }
 
-    public void SetupGameManagerInAB()
+    public void SetupGameManagerWithoutIntro()
     {
         subMasterValueId = javascriptHook.playerData.sub_master_value_id;
 
@@ -244,7 +245,26 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        StartCoroutine(StartGame(0f));
+        // setup gate
+        for (int i = 0; i < introManager.gateDetails.Count; i++)
+        {
+            if (introManager.gateDetails[i].id == int.Parse(subMasterValueId))
+            {
+                if (introManager.gateDetails[i].haveGate)
+                {
+                    introManager.gateDetails[i].gate.SetActive(true);
+                    introManager.titleText[1].GetComponent<Text>().text = introManager.gateDetails[i].booth_type;
+                    StartCoroutine(StartGateWithoutIntro(introManager.gateDetails[i].gate));
+                }
+                else
+                {
+                    StartCoroutine(StartGame(0f));
+                }
+
+                break;
+            }
+        }
+
         isPlay = true;
     }
 
@@ -300,6 +320,14 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(cooldownBetweenGame);
         gate.GetComponent<Animator>().SetTrigger("isPopDown");
         introManager.introHandler[1].GetComponent<Animator>().SetTrigger("isPopUp");
+    }
+
+    public IEnumerator StartGateWithoutIntro(GameObject gate)
+    {
+        yield return new WaitForSeconds(cooldownBetweenGame);
+        gate.GetComponent<Animator>().SetTrigger("isPopDown");
+        yield return new WaitUntil(() => gate.transform.GetChild(1).transform.localScale.x <= 0);
+        StartCoroutine(StartGame(0f));
     }
 
     public static string HTMLToText(string HTMLCode)

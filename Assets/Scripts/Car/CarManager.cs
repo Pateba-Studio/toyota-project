@@ -161,10 +161,16 @@ public class CarManager : MonoBehaviour
 
                     if (gameManager.getQuestion.hallType == HallType.PDP)
                     {
-                        if (!isDone) gameOver[0].SetActive(true);
-                        else gameOver[int.Parse(gameManager.subMasterValueId) - 1].SetActive(true);
-
-                        StartCoroutine(gameManager.StartGame(2.5f));
+                        if (!isDone)
+                        { 
+                            gameOver[0].SetActive(true);
+                            StartCoroutine(gameManager.StartGame(2.5f));
+                        }
+                        else
+                        {
+                            gameOver[int.Parse(gameManager.subMasterValueId) - 1].SetActive(true);
+                            StartCoroutine(gameManager.getQuestion.PostLastCheckpoint());
+                        }
                     }
                     else
                     {

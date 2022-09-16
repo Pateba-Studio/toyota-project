@@ -1,11 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
+    public bool isMute;
+    public Button muteButton;
+    public Sprite muteSprite;
+    public Sprite unmuteSprite;
     public AudioSource bgmSource;
+    public List<AudioSource> audioSources;
     public Sound[] sounds;
     public static AudioManager instance;
 
@@ -29,24 +36,52 @@ public class AudioManager : MonoBehaviour
             s.source.playOnAwake = s.onAwake;
             //s.source.PlayOneShot(s.clip) = s.oneShot;
         }
-    }
 
-    void Start()
-    {
-        //Play("Theme");
+        isMute = Convert.ToBoolean(PlayerPrefs.GetInt("Mute"));
     }
 
     void Update()
     {
-        if (SceneManager.GetActiveScene().name == "Gate")
-            bgmSource.mute = true;
-        else
-            bgmSource.mute = false;
+        if (muteButton == null)
+        {
+            audioSources.Clear();
+
+            var audios = FindObjectsOfType<AudioSource>();
+            foreach (AudioSource sources in audios)
+            {
+                audioSources.Add(sources);
+                if (isMute) sources.mute = true;
+                else sources.mute = false;
+            }
+
+            muteButton = GameObject.Find("Mute Button").GetComponent<Button>();
+            muteButton.onClick.AddListener(() => MuteButtonClicked());
+
+            if (isMute) muteButton.GetComponent<Image>().sprite = unmuteSprite;
+            else muteButton.GetComponent<Image>().sprite = muteSprite;
+        }
     }
 
-    public void ButtonClick()
+    public void MuteButtonClicked()
     {
-        //PlayOneShot("Click");
+        if (!isMute)
+        {
+            isMute = true;
+            muteButton.GetComponent<Image>().sprite = unmuteSprite;
+            PlayerPrefs.SetInt("Mute", 1);
+
+            foreach (AudioSource sources in audioSources)
+                sources.mute = true;
+        }
+        else
+        {
+            isMute = false;
+            muteButton.GetComponent<Image>().sprite = muteSprite;
+            PlayerPrefs.SetInt("Mute", 0);
+
+            foreach (AudioSource sources in audioSources)
+                sources.mute = false;
+        }
     }
 
     public void Play(string name)
@@ -65,7 +100,6 @@ public class AudioManager : MonoBehaviour
 
     public void PlayOneShot(string name)
     {
-
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if (s == null)
         {
@@ -79,7 +113,6 @@ public class AudioManager : MonoBehaviour
 
     public void Mute(string name)
     {
-
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if (s == null)
         {
@@ -93,7 +126,6 @@ public class AudioManager : MonoBehaviour
 
     public void UnMute(string name)
     {
-
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if (s == null)
         {
@@ -110,5 +142,4 @@ public class AudioManager : MonoBehaviour
             s.source.volume = 0.1f;
         }
     }
-    //FindObjectOfType<AudioManager>().Play("Show");
 }

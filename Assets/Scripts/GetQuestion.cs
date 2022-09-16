@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum HallType
 {
@@ -119,6 +120,7 @@ public class GetQuestion : MonoBehaviour
 
     [Header("Question Hook Attribute")]
     [TextArea(2, 2)] public string hallABURL;
+    [TextArea(2, 2)] public string introPDPURL;
     [TextArea(2, 2)] public string notifAssessmentSuccessURL;
     [TextArea(2, 2)] public string assesmentURL;
     [TextArea(2, 2)] public string getAssesmentStatusURL;
@@ -170,7 +172,26 @@ public class GetQuestion : MonoBehaviour
                 print($"POST SUCCESS!");
 
                 if (hallType == HallType.AB)
-                    StartCoroutine(gameManager.OpenRoom(gameManager.getQuestion.hallABURL));
+                    StartCoroutine(gameManager.OpenRoom(hallABURL));
+                else if (hallType == HallType.PDP)
+                {
+                    if (int.Parse(playerDataHandler.playerData.sub_master_value_id) < 6)
+                    {
+                        string value = string.Empty;
+                        if (int.Parse(playerDataHandler.playerData.sub_master_value_id) < 3) value = "collecting";
+                        else if (int.Parse(playerDataHandler.playerData.sub_master_value_id) == 3) value = "storing";
+                        else if (int.Parse(playerDataHandler.playerData.sub_master_value_id) == 4) value = "transfer";
+                        else if (int.Parse(playerDataHandler.playerData.sub_master_value_id) == 5) value = "data-breach";
+
+                        StartCoroutine(gameManager.OpenRoom(introPDPURL + value));
+                    }
+                    else
+                    {
+                        playerDataHandler.playerData.sub_master_value_id = (int.Parse(playerDataHandler.playerData.sub_master_value_id) + 1).ToString();
+                        yield return new WaitForSeconds(2.5f);
+                        SceneManager.LoadScene("Gate");
+                    }
+                }
             }
         }
     }
@@ -253,29 +274,29 @@ public class GetQuestion : MonoBehaviour
             }
         }
 
-        if (gameManager.isFirstLaunched &&
-            hallType == HallType.PDP)
-        {
-            using (UnityWebRequest request = UnityWebRequest.Get($"{initializeIntroURL}1"))
-            {
-                yield return request.SendWebRequest();
-                if (request.isNetworkError || request.isHttpError)
-                    Debug.Log(request.error);
-                else
-                {
-                    string jsonIntro = request.downloadHandler.text;
-                    initializeIntro = JsonUtility.FromJson<InitializeIntro>(jsonIntro);
-                    introManager.initializeIntro = initializeIntro;
-                }
-            }
+        //if (gameManager.isFirstLaunched &&
+        //    hallType == HallType.PDP)
+        //{
+        //    using (UnityWebRequest request = UnityWebRequest.Get($"{initializeIntroURL}1"))
+        //    {
+        //        yield return request.SendWebRequest();
+        //        if (request.isNetworkError || request.isHttpError)
+        //            Debug.Log(request.error);
+        //        else
+        //        {
+        //            string jsonIntro = request.downloadHandler.text;
+        //            initializeIntro = JsonUtility.FromJson<InitializeIntro>(jsonIntro);
+        //            introManager.initializeIntro = initializeIntro;
+        //        }
+        //    }
 
-            gameManager.SpawnInitializeIntro();
-        }
-        else if (hallType == HallType.AB)
-        {
-            gameManager.SetupGameManagerInAB();
-        }
-        else
-            gameManager.SetupGameManager();
+        //    gameManager.SpawnInitializeIntro();
+        //}
+        //if (hallType == HallType.AB)
+        //    gameManager.SetupGameManagerWithoutIntro();
+        //else
+        //    gameManager.SetupGameManager();
+
+        gameManager.SetupGameManagerWithoutIntro();
     }
 }
