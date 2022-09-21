@@ -5235,7 +5235,7 @@ MonoBehaviour:
   isInitialized: 0
   playerData:
     email: 0
-    ticket: '0 '
+    ticket: 0
     sub_master_value_id: 0
 --- !u!114 &1324065998
 MonoBehaviour:

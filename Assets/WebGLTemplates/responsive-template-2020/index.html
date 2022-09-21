@@ -26,7 +26,8 @@ https://github.com/sno/unity-webgl-responsive
       <div class="aspect"></div>
       <div class="webgl-content">
         <div id="unityContainer">
-          <canvas id="unity-canvas" style="background: url('assets/images/test.gif') center / cover"></canvas>
+          <canvas id="unity-canvas" style="background: {{{ BACKGROUND_FILENAME ? 'url(\'Build/' + BACKGROUND_FILENAME.replace(/'/g, '%27') + '\') center / cover' : BACKGROUND_COLOR }}}"></canvas>
+          <!-- <canvas id="unity-canvas" style="background: url('assets/images/loading.gif') center / cover"></canvas> -->
           <div  id="LoadContainer" style="display: block; position: absolute; top: 0; right: 0; height: 100%; width: 100%;">
             
             <!-- <div class="logo"></div> -->

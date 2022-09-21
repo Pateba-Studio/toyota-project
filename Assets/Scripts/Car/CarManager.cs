@@ -61,7 +61,7 @@ public class CarManager : MonoBehaviour
 
     public IEnumerator SetQuestion()
     {
-        logoTAM.SetActive(true);
+        logoTAM.SetActive(false);
         imageHandler.SetActive(false);
         videoHandler.SetActive(false);
 
@@ -71,31 +71,35 @@ public class CarManager : MonoBehaviour
         {
             if (gameManager.questionInfos[i].gameType == SceneManager.GetActiveScene().name)
             {
-                if (gameManager.questionInfos[i].questionDetails[0].media != string.Empty &&
-                    gameManager.questionInfos[i].questionDetails[0].audio != string.Empty)
-                {
-                    logoTAM.SetActive(false);
-                    videoHandler.SetActive(true);
+                //if (gameManager.questionInfos[i].questionDetails[0].media != string.Empty &&
+                //    gameManager.questionInfos[i].questionDetails[0].audio != string.Empty)
+                //{
+                //    logoTAM.SetActive(false);
+                //    videoHandler.SetActive(true);
 
-                    videoHandler.GetComponent<VideoScript>().videoDetails.videoURL = gameManager.questionInfos[i].questionDetails[0].media;
-                    videoHandler.GetComponent<VideoScript>().videoDetails.audioURL = gameManager.questionInfos[i].questionDetails[0].audio;
-                    videoHandler.GetComponent<VideoScript>().PlayVideo(videoIsFinished);
+                //    videoHandler.GetComponent<VideoScript>().videoDetails.videoURL = gameManager.questionInfos[i].questionDetails[0].media;
+                //    videoHandler.GetComponent<VideoScript>().videoDetails.audioURL = gameManager.questionInfos[i].questionDetails[0].audio;
+                //    videoHandler.GetComponent<VideoScript>().PlayVideo(videoIsFinished);
 
-                    Pause();
-                }
-                else if (gameManager.questionInfos[i].questionDetails[0].media != string.Empty)
-                {
-                    logoTAM.SetActive(false);
-                    imageHandler.SetActive(true);
+                //    Pause();
+                //}
+                //else if (gameManager.questionInfos[i].questionDetails[0].media != string.Empty)
+                //{
+                //    logoTAM.SetActive(false);
+                //    imageHandler.SetActive(true);
 
-                    StartCoroutine(ProcessImageAttribute(gameManager.questionInfos[i].questionDetails[0].media));
-                }
-                else
-                {
-                    logoTAM.SetActive(true);
-                    imageHandler.SetActive(false);
-                    videoHandler.SetActive(false);
-                }
+                //    StartCoroutine(ProcessImageAttribute(gameManager.questionInfos[i].questionDetails[0].media));
+                //}
+                //else
+                //{
+                //    logoTAM.SetActive(true);
+                //    imageHandler.SetActive(false);
+                //    videoHandler.SetActive(false);
+                //}
+
+                logoTAM.SetActive(false);
+                imageHandler.SetActive(false);
+                videoHandler.SetActive(false);
 
                 soal.text = gameManager.questionInfos[i].questionDetails[0].question;
                 leftAns.text = gameManager.questionInfos[i].questionDetails[0].answerDetails[0].answer;

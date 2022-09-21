@@ -127,39 +127,44 @@ public class QuizManager : MonoBehaviour
 
     public void SetCurrentQuestion()
     {
-        logoTAM.SetActive(true);
+        logoTAM.SetActive(false);
         imageHandler.SetActive(false);
         videoHandler.SetActive(false);
 
         currentQuestion = unansweredQuestions[0];
         soalText.text = currentQuestion.Soal;
 
-        if (currentQuestion.mediaURL != string.Empty &&
-            currentQuestion.audioURL != string.Empty)
-        {
-            logoTAM.SetActive(false);
-            videoHandler.SetActive(true);
+        //if (currentQuestion.mediaURL != string.Empty &&
+        //    currentQuestion.audioURL != string.Empty)
+        //{
+        //    logoTAM.SetActive(false);
+        //    videoHandler.SetActive(true);
 
-            for (int i = 0; i < answerButton.Length; i++)
-                answerButton[i].interactable = false;
+        //    for (int i = 0; i < answerButton.Length; i++)
+        //        answerButton[i].interactable = false;
 
-            videoHandler.GetComponent<VideoScript>().videoDetails.videoURL = currentQuestion.mediaURL;
-            videoHandler.GetComponent<VideoScript>().videoDetails.audioURL = currentQuestion.audioURL;
-            videoHandler.GetComponent<VideoScript>().PlayVideo(videoIsFinished);
-        }
-        else if (currentQuestion.mediaURL != string.Empty)
-        {
-            logoTAM.SetActive(false);
-            imageHandler.SetActive(true);
+        //    videoHandler.GetComponent<VideoScript>().videoDetails.videoURL = currentQuestion.mediaURL;
+        //    videoHandler.GetComponent<VideoScript>().videoDetails.audioURL = currentQuestion.audioURL;
+        //    videoHandler.GetComponent<VideoScript>().PlayVideo(videoIsFinished);
+        //}
+        //else if (currentQuestion.mediaURL != string.Empty)
+        //{
+        //    logoTAM.SetActive(false);
+        //    imageHandler.SetActive(true);
 
-            StartCoroutine(ProcessImageAttribute(currentQuestion.mediaURL));
-            EnableAnswer();
-        }
-        else
-        {
-            logoTAM.SetActive(true);
-            EnableAnswer();
-        }
+        //    StartCoroutine(ProcessImageAttribute(currentQuestion.mediaURL));
+        //    EnableAnswer();
+        //}
+        //else
+        //{
+        //    logoTAM.SetActive(true);
+        //    EnableAnswer();
+        //}
+
+        logoTAM.SetActive(false);
+        imageHandler.SetActive(false);
+        videoHandler.SetActive(false);
+        EnableAnswer();
 
         for (int i = 0; i < 4; i++)
         {

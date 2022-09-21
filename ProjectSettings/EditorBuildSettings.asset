@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Baloon.unity
     guid: cecb178c1b13b5c4f90bb5e1d6079352
+  - enabled: 0
+    path: Assets/Scenes/SampleScene.unity
+    guid: f0509f768ff2690469cc6be49d96e160
   m_configObjects: {}
