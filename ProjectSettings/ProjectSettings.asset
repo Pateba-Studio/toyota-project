@@ -555,14 +555,14 @@ PlayerSettings:
   ps4IncludedModules: []
   ps4attribVROutputEnabled: 0
   monoEnv: 
-  splashScreenBackgroundSourceLandscape: {fileID: 21300000, guid: a8541d8a750052d408db4f1192b1f470, type: 3}
-  splashScreenBackgroundSourcePortrait: {fileID: 21300000, guid: a8541d8a750052d408db4f1192b1f470, type: 3}
+  splashScreenBackgroundSourceLandscape: {fileID: 21300000, guid: 2e09465bb7be35447921125b401c3376, type: 3}
+  splashScreenBackgroundSourcePortrait: {fileID: 21300000, guid: 2e09465bb7be35447921125b401c3376, type: 3}
   blurSplashScreenBackground: 0
   spritePackerPolicy: 
   webGLMemorySize: 32
   webGLExceptionSupport: 0
-  webGLNameFilesAsHashes: 0
-  webGLDataCaching: 0
+  webGLNameFilesAsHashes: 1
+  webGLDataCaching: 1
   webGLDebugSymbols: 0
   webGLEmscriptenArgs: 
   webGLModulesDirectory: 
@@ -573,7 +573,7 @@ PlayerSettings:
   webGLWasmArithmeticExceptions: 0
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
-  webGLDecompressionFallback: 0
+  webGLDecompressionFallback: 1
   scriptingDefineSymbols: {}
   additionalCompilerArguments: {}
   platformArchitecture: {}

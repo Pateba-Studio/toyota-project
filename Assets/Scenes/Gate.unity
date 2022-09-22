@@ -5189,7 +5189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4feb326840531244d8dc8a4068eff2a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hallType: 0
+  hallType: 1
   hallABURL: https://tamconnect.com/virtual-experience/virtual/ab
   introPDPURL: https://tamconnect.com/virtual-experience/intro/hall/
   notifAssessmentSuccessURL: https://tamconnect.com/virtual-experience/assesment-success
@@ -5305,7 +5305,7 @@ MonoBehaviour:
     source: {fileID: 0}
     loop: 0
     onAwake: 0
-    volume: 0.5
+    volume: 0.25
 --- !u!82 &1324066000
 AudioSource:
   m_ObjectHideFlags: 0
