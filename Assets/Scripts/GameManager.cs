@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Text.RegularExpressions;
 using System.Text;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine.Networking;
 using UnityEngine.Video;
 using System.IO;
@@ -180,13 +181,13 @@ public class GameManager : MonoBehaviour
 
                 if (introManager.gateDetails[i].haveGate)
                 {
-                    introManager.titleText[1].GetComponent<Text>().text = introManager.gateDetails[i].booth_type;
+                    introManager.titleText[1].GetComponent<TextMeshProUGUI>().text = introManager.gateDetails[i].booth_type;
                     StartCoroutine(StartGate(introManager.gateDetails[i].gate));
                 }
                 else
                 {
                     introManager.gateDetails[i].gate.SetActive(true);
-                    introManager.titleText[1].GetComponent<Text>().text = introManager.gateDetails[i].booth_type;
+                    introManager.titleText[1].GetComponent<TextMeshProUGUI>().text = introManager.gateDetails[i].booth_type;
                     introManager.introHandler[1].GetComponent<Animator>().SetTrigger("isPopUp");
                 }
 
@@ -253,7 +254,7 @@ public class GameManager : MonoBehaviour
                 if (introManager.gateDetails[i].haveGate)
                 {
                     introManager.gateDetails[i].gate.SetActive(true);
-                    introManager.titleText[1].GetComponent<Text>().text = introManager.gateDetails[i].booth_type;
+                    introManager.titleText[1].GetComponent<TextMeshProUGUI>().text = introManager.gateDetails[i].booth_type;
                     StartCoroutine(StartGateWithoutIntro(introManager.gateDetails[i].gate));
                 }
                 else

@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine;
+using TMPro;
 
 public class CarManager : MonoBehaviour
 {
@@ -22,9 +23,9 @@ public class CarManager : MonoBehaviour
     public GameObject videoHandler;
     public GameObject imageHandler;
     public GameObject logoTAM;
-    public Text leftAns;
-    public Text rightAns;
-    public Text soal;
+    public TextMeshProUGUI leftAns;
+    public TextMeshProUGUI rightAns;
+    public TextMeshProUGUI soal;
 
     // Use this for initialization
     void Start()

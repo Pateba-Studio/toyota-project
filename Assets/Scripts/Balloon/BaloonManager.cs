@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 public class BaloonManager : MonoBehaviour
 {
@@ -23,8 +24,8 @@ public class BaloonManager : MonoBehaviour
     public GameObject videoHandler;
     public GameObject imageHandler;
     public GameObject logoTAM;
-    public Text questionText;
-    public List<Text> answerText; 
+    public TextMeshProUGUI questionText;
+    public List<TextMeshProUGUI> answerText; 
 
     // Start is called before the first frame update
     void Start()

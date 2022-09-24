@@ -9,6 +9,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using UnityEngine.Events;
+using TMPro;
 
 [System.Serializable]
 public class GateDetails
@@ -84,7 +85,7 @@ public class IntroManager : MonoBehaviour
 
     public void StartInitializeIntro()
     {
-        titleText[0].GetComponent<Text>().text = "Intro Hall PDP";
+        titleText[0].GetComponent<TextMeshProUGUI>().text = "Intro Hall PDP";
 
         nextButton[0].SetActive(false);
         instructionText[0].SetActive(false);
@@ -124,7 +125,7 @@ public class IntroManager : MonoBehaviour
             textHandler[1].SetActive(true);
             SetButtonAndInstruction(true, false);
 
-            descriptionTextHandler[1].GetComponent<Text>().text = introInfo[introIndex].description;
+            descriptionTextHandler[1].GetComponent<TextMeshProUGUI>().text = introInfo[introIndex].description;
         }
     }
 

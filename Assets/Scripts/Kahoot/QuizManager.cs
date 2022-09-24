@@ -21,8 +21,8 @@ public class QuizManager : MonoBehaviour
     public GameObject videoHandler;
     public GameObject imageHandler;
     public GameObject logoTAM;
-    public Text soalText;
-    public Text[] answerText;
+    public TextMeshProUGUI soalText;
+    public TextMeshProUGUI[] answerText;
     public Button[] answerButton;
     public SoalData[] questions;
     public UnityEvent videoIsFinished;

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 
 public class ArcherManager : MonoBehaviour
@@ -23,8 +24,8 @@ public class ArcherManager : MonoBehaviour
     public GameObject videoHandler;
     public GameObject imageHandler;
     public GameObject logoTAM;
-    public Text[] answers;
-    public Text soal;
+    public TextMeshProUGUI[] answers;
+    public TextMeshProUGUI soal;
 
     // Use this for initialization
     void Start()
