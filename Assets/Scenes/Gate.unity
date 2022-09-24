@@ -5194,12 +5194,12 @@ MonoBehaviour:
   introPDPURL: https://tamconnect.com/virtual-experience/intro/hall/
   notifAssessmentSuccessURL: https://tamconnect.com/virtual-experience/assesment-success
   assesmentURL: https://tamconnect.com/virtual-experience/assesment/pdp
-  getAssesmentStatusURL: https://www.tamconnect.com/api/assesment/get-status
-  postCheckpointURL: https://tamconnect.com/api/game-question/push-checkpoint
-  getCheckpointURL: https://tamconnect.com/api/checkpoint
-  questionURL: https://tamconnect.com/api/game-question
-  initializeIntroURL: https://www.tamconnect.com/api/master-value/intro/
-  introURL: https://tamconnect.com/api/sub-master-value/intro/
+  getAssesmentStatusURL: https://tamconnect.com/virtual-experience/api/assesment/get-status
+  postCheckpointURL: https://tamconnect.com/virtual-experience/api/game-question/push-checkpoint
+  getCheckpointURL: https://tamconnect.com/virtual-experience/api/checkpoint
+  questionURL: https://tamconnect.com/virtual-experience/api/game-question
+  initializeIntroURL: https://tamconnect.com/virtual-experience/api/master-value/intro/
+  introURL: https://tamconnect.com/virtual-experience/api/sub-master-value/intro/
   playerDataHandler: {fileID: 1324065997}
   introManager: {fileID: 937742458}
   gameManager: {fileID: 1324065998}
@@ -5232,10 +5232,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d1d5ac43fa307d4392657a89387143b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInitialized: 0
+  isInitialized: 1
   playerData:
     email: 0
-    ticket: 0
+    ticket: 65A2B618
     sub_master_value_id: 0
 --- !u!114 &1324065998
 MonoBehaviour:

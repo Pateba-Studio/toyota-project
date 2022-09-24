@@ -10,7 +10,9 @@ TrueTypeFontImporter:
   includeFontData: 1
   fontNames:
   - Gotham Light
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 033fdae755282374ab3f1854d31715c2, type: 3}
+  - {fileID: 12800000, guid: c69850bff137a9b4b82e485ad81cb2c1, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

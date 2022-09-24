@@ -10,7 +10,9 @@ TrueTypeFontImporter:
   includeFontData: 1
   fontNames:
   - Gotham Thin
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 64609a43dc9e0ac428b6b9c4e3a4fcf1, type: 3}
+  - {fileID: 12800000, guid: 6388357514d1bcb449aaf24ae2a4b40a, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

@@ -10,7 +10,8 @@ TrueTypeFontImporter:
   includeFontData: 1
   fontNames:
   - Gotham
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 700f5b4bb0094b947ba910177195a012, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1
