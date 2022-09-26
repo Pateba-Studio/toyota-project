@@ -1654,7 +1654,7 @@ MonoBehaviour:
   m_text: Instruksi
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f940053be8673044ba86712395fb035a, type: 2}
-  m_sharedMaterial: {fileID: 0}
+  m_sharedMaterial: {fileID: -964439023509806694, guid: f940053be8673044ba86712395fb035a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1673,7 +1673,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1704,7 +1704,7 @@ MonoBehaviour:
   checkPaddingRequired: 0
   m_isRichText: 1
   m_parseCtrlCharacters: 1
-  m_isOrthographic: 0
+  m_isOrthographic: 1
   m_isCullingEnabled: 0
   m_horizontalMapping: 0
   m_verticalMapping: 0
@@ -1717,7 +1717,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &358397459
@@ -5617,10 +5617,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d1d5ac43fa307d4392657a89387143b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInitialized: 1
+  isInitialized: 0
   playerData:
     email: 0
-    ticket: 65A2B618
+    ticket: 0
     sub_master_value_id: 0
 --- !u!114 &1324065998
 MonoBehaviour:

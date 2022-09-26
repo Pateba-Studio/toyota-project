@@ -8,6 +8,7 @@ using TMPro;
 
 public class CarManager : MonoBehaviour
 {
+    public bool isDone;
     public GameManager gameManager;
     public AudioSource am;
     public GameObject correctAnswer;
@@ -152,43 +153,45 @@ public class CarManager : MonoBehaviour
                 {
                     FindObjectOfType<AudioManager>().Play("GameOverSFX");
 
-                    bool isDone = false;
+                    bool isFinish = false;
                     for (int j = 0; j < gameManager.questionInfos.Count; j++)
                     {
                         if (gameManager.questionInfos[j].questionDetails.Count > 0)
                         {
-                            isDone = false;
+                            isFinish = false;
                             break;
                         }
                         else
-                            isDone = true;
+                            isFinish = true;
                     }
 
                     if (gameManager.getQuestion.hallType == HallType.PDP)
                     {
-                        if (!isDone)
-                        { 
+                        if (!isFinish)
+                        {
                             gameOver[0].SetActive(true);
                             StartCoroutine(gameManager.StartGame(2.5f));
                         }
-                        else
+                        else if (isFinish && !isDone)
                         {
                             gameOver[int.Parse(gameManager.subMasterValueId) - 1].SetActive(true);
                             StartCoroutine(gameManager.getQuestion.PostLastCheckpoint());
+                            isDone = true;
                         }
                     }
                     else
                     {
-                        if (isDone)
+                        if (!isFinish)
+                        {
+                            gameOver[0].SetActive(true);
+                            StartCoroutine(gameManager.StartGame(2.5f));
+                        }
+                        else if (isFinish && !isDone)
                         {
                             gameOver[1].SetActive(true);
                             StartCoroutine(gameManager.getQuestion.PostLastCheckpoint());
                             //StartCoroutine(gameManager.OpenRoom(gameManager.getQuestion.hallABURL));
-                        }
-                        else
-                        {
-                            gameOver[0].SetActive(true);
-                            StartCoroutine(gameManager.StartGame(2.5f));
+                            isDone = true;
                         }
                     }
                 }

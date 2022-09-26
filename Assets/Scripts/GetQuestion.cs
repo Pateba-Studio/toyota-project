@@ -183,9 +183,10 @@ public class GetQuestion : MonoBehaviour
                         else if (int.Parse(playerDataHandler.playerData.sub_master_value_id) == 4) value = "transfer";
                         else if (int.Parse(playerDataHandler.playerData.sub_master_value_id) == 5) value = "data-breach";
 
+                        PlayerPrefs.SetInt("PopUpAssessment", 0);
                         StartCoroutine(gameManager.OpenRoom(introPDPURL + value));
                     }
-                    else
+                    else if (int.Parse(playerDataHandler.playerData.sub_master_value_id) == 6)
                     {
                         playerDataHandler.playerData.sub_master_value_id = (int.Parse(playerDataHandler.playerData.sub_master_value_id) + 1).ToString();
                         yield return new WaitForSeconds(2.5f);
@@ -233,16 +234,25 @@ public class GetQuestion : MonoBehaviour
             {
                 string jsonCheckpoint = request.downloadHandler.text;
                 checkpointData = JsonUtility.FromJson<CheckpointData>(jsonCheckpoint);
+
+                int tempValue = checkpointData.data.last_checkpoint.sub_master_value_id + 1;
+                if (tempValue > 6 && PlayerPrefs.GetInt("PopUpAssessment") == 0 ||
+                    tempValue > 6 && !gameManager.assesmentIsDone)
+                {
+                    playerDataHandler.playerData.sub_master_value_id = $"{tempValue}";
+                }
+                else if (tempValue > 6 && PlayerPrefs.GetInt("PopUpAssessment") == 1)
+                {
+                    playerDataHandler.playerData.sub_master_value_id = $"{3}";
+                    StartCoroutine(PostData_Coroutine());
+                }
+                else if ((3 <= tempValue && tempValue <= 6))
+                {
+                    playerDataHandler.playerData.sub_master_value_id = $"{tempValue}";
+                    StartCoroutine(PostData_Coroutine());
+                }
             }
         }
-
-        int id = checkpointData.data.last_checkpoint.sub_master_value_id + 1;
-
-        if (id <= 3 || id > 6 && gameManager.assesmentIsDone) id = 3;
-        playerDataHandler.playerData.sub_master_value_id = $"{id}";
-
-        if (id >= 3 && id <= 6)
-            StartCoroutine(PostData_Coroutine());
     }
 
     public IEnumerator PostData_Coroutine()

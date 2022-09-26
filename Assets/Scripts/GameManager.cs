@@ -70,23 +70,15 @@ public class GameManager : MonoBehaviour
     {
         subMasterValueId = javascriptHook.playerData.sub_master_value_id;
 
-        if (int.Parse(javascriptHook.playerData.sub_master_value_id) > 6 && 
+        if (int.Parse(javascriptHook.playerData.sub_master_value_id) > 6 &&
             SceneManager.GetActiveScene().name == "Gate" &&
+            getQuestion.hallType == HallType.PDP &&
             statusIsGot)
         {
             introManager = GameObject.Find("Intro Manager").GetComponent<IntroManager>();
             getQuestion.introManager = introManager;
-
-            if (getQuestion.hallType == HallType.PDP)
-            {
-                //if (!assesmentIsDone)
-                //    SpawnPopUpAssesment();
-                //else if (assesmentIsDone)
-                //    StartCoroutine(OpenRoom(getQuestion.notifAssessmentSuccessURL));
-
-                SpawnPopUpAssesment();
-                statusIsGot = false;
-            }
+            SpawnPopUpAssesment();
+            statusIsGot = false;
         }
     }
 
@@ -99,7 +91,10 @@ public class GameManager : MonoBehaviour
     public void SpawnPopUpAssesment()
     {
         introManager.assesmentPopUp.SetActive(true);
-        introManager.assesmentPopUp.transform.GetComponentInChildren<Button>().onClick.AddListener(() => StartCoroutine(OpenRoom(getQuestion.assesmentURL)));
+        introManager.assesmentPopUp.transform.GetComponentInChildren<Button>().onClick.AddListener(() => {
+            PlayerPrefs.SetInt("PopUpAssessment", 1);
+            StartCoroutine(OpenRoom(getQuestion.assesmentURL));
+        });
     }
 
     public void SpawnInitializeIntro()
@@ -297,23 +292,23 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            for (int j = 0; j < questionInfos.Count; j++)
-                questionInfos[j].questionDetails.Clear();
+        //else
+        //{
+        //    for (int j = 0; j < questionInfos.Count; j++)
+        //        questionInfos[j].questionDetails.Clear();
 
-            if (getQuestion.hallType == HallType.PDP)
-            {
-                StartCoroutine(getQuestion.PostLastCheckpoint());
-                javascriptHook.playerData.sub_master_value_id = $"{int.Parse(javascriptHook.playerData.sub_master_value_id) + 1}";
+        //    if (getQuestion.hallType == HallType.PDP)
+        //    {
+        //        StartCoroutine(getQuestion.PostLastCheckpoint());
+        //        javascriptHook.playerData.sub_master_value_id = $"{int.Parse(javascriptHook.playerData.sub_master_value_id) + 1}";
 
-                isPlay = isDone = false;
-                SceneManager.LoadScene("Gate");
+        //        isPlay = isDone = false;
+        //        SceneManager.LoadScene("Gate");
 
-                if (int.Parse(javascriptHook.playerData.sub_master_value_id) <= 6)
-                    StartCoroutine(getQuestion.PostData_Coroutine());
-            }
-        }
+        //        if (int.Parse(javascriptHook.playerData.sub_master_value_id) <= 6)
+        //            StartCoroutine(getQuestion.PostData_Coroutine());
+        //    }
+        //}
     }
 
     public IEnumerator StartGate(GameObject gate)
